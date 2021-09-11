@@ -1,3 +1,7 @@
 module.exports = {
-  reactStrictMode: true,
+	reactStrictMode: true,
+	webpack: (config) => {
+		config.experiments = { topLevelAwait: true }
+		return config
+	},
 }
