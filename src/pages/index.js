@@ -1,14 +1,15 @@
 import Head from "next/head"
 import Image from "next/image"
-import { useSession, signIn, signOut } from "next-auth/react"
+import { useSession } from "next-auth/react"
 
-import SignInStatus from "../components/Users/signInStatus"
+import Layout from "../components/master/layout"
 
-export default function Component({ client }) {
+export default function HomePage({ client }) {
 	const { data: session } = useSession()
+
 	return (
-		<>
-			<SignInStatus session={session} />
-		</>
+		<Layout session={session}>
+			<h1 className='text-6xl'>Content Here</h1>
+		</Layout>
 	)
 }
