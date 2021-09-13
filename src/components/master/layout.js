@@ -9,7 +9,7 @@ export default function layout({ children, session }) {
 	return (
 		<div className=''>
 			<Header session={session} />
-			<main className='bg-green-200 p-6 ml-10 mr-10 '>{children}</main>
+			<main className='bg-green-200  '>{children}</main>
 			<Footer />
 		</div>
 	)
