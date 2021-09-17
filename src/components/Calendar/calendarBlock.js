@@ -32,7 +32,7 @@ export default function calendarBlock({ session }) {
 
 	const getDateData = async (res) => {
 		let results = await JSON.parse(JSON.stringify(res))
-
+		let res2 = JSON.parse(JSON.stringify(results))
 		let today = new Date()
 		let thisMonth = thisDate.getMonth()
 		let thisYear = thisDate.getFullYear()

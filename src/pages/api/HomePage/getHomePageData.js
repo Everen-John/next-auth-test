@@ -7,8 +7,8 @@ export default async function getHomePageData(req, res) {
 
 	const client = await clientPromise
 
-	var db = client.db("eren-db")
-	var collection = db.collection("users")
+	var db = await client.db(process.env.DATABASE_NAME)
+	var collection = await db.collection("users")
 
 	var options = {}
 
@@ -20,37 +20,37 @@ export default async function getHomePageData(req, res) {
 		},
 		{
 			$project: {
-				classes_joined: 1.0,
+				intakes_joined: 1.0,
 			},
 		},
 		{
 			$unwind: {
-				path: "$classes_joined",
+				path: "$intakes_joined",
 			},
 		},
 		{
 			$lookup: {
-				from: "classrooms",
+				from: "intakes",
 				foreignField: "_id",
-				localField: "classes_joined",
-				as: "classes_data",
+				localField: "intakes_joined",
+				as: "intakes_data",
 			},
 		},
 		{
 			$project: {
 				_id: 0.0,
-				classes_joined: 1.0,
-				classes_data: 1.0,
+				intakes_joined: 1.0,
+				intakes_data: 1.0,
 			},
 		},
 		{
 			$unwind: {
-				path: "$classes_data",
+				path: "$intakes_data",
 			},
 		},
 		{
 			$addFields: {
-				announcements: "$classes_data.announcement_oIDs",
+				announcements: "$intakes_data.announcement_oIDs",
 			},
 		},
 		{
@@ -60,7 +60,7 @@ export default async function getHomePageData(req, res) {
 		},
 		{
 			$lookup: {
-				from: "announcements",
+				from: "Announcements",
 				localField: "announcements",
 				foreignField: "_id",
 				as: "announcement_data",
@@ -73,7 +73,7 @@ export default async function getHomePageData(req, res) {
 		},
 		{
 			$addFields: {
-				class_name: "$classes_data.class_name",
+				intake_name: "$intakes_data.intake_name",
 				announcement_title: "$announcement_data.announcement_Title",
 				announcement_description: "$announcement_data.announcement_description",
 				bgcolor: "$announcement_data.bgcolor",
@@ -87,8 +87,8 @@ export default async function getHomePageData(req, res) {
 		},
 		{
 			$project: {
-				class_name: 1.0,
-				classes_id: "$classes_joined",
+				intake_name: 1.0,
+				intakes_id: "$intakes_joined",
 				announcement_id: "$announcements",
 				announcement_title: 1.0,
 				announcement_description: 1.0,
@@ -109,12 +109,12 @@ export default async function getHomePageData(req, res) {
 				},
 				announcements: {
 					$push: {
-						class_name: "$class_name",
+						intake_name: "$intake_name",
 						announcement_title: "$announcement_title",
-						announcement_description: "$announcement_description",
+						announcement_description: "announcement_description",
 						bgcolor: "$bgcolor",
 						month: "$month",
-						classes_id: "$classes_id",
+						intakes_id: "$intakes_id",
 						announcement_id: "$announcement_id",
 					},
 				},
@@ -129,5 +129,6 @@ export default async function getHomePageData(req, res) {
 
 	var cursor = await collection.aggregate(pipeline, options)
 	var finalData = await cursor.toArray()
+
 	res.status(200).json(finalData)
 }
