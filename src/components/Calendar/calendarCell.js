@@ -10,9 +10,9 @@ export default function CalendarCell({
 	announcementDatas,
 	calendarDatas,
 	isToday,
+	id,
 }) {
 	const [showModal, setShowModal] = useState(false)
-	console.log(isToday)
 	return (
 		<div
 			className='border-solid border-b-2 p-1 h-20 bg-white'
@@ -28,9 +28,14 @@ export default function CalendarCell({
 				{dayNum}
 			</div>
 			{announcementDatas
-				? announcementDatas.map((item) => (
-						<AnnouncementBlock announcementData={item} />
-				  ))
+				? announcementDatas.map((item) => {
+						return (
+							<AnnouncementBlock
+								announcementData={item}
+								key={item.announcement_id}
+							/>
+						)
+				  })
 				: null}
 
 			{showModal ? (
@@ -66,6 +71,7 @@ export default function CalendarCell({
 													" rounded-md my-4 text-blueGray-500 text-lg leading-relaxed p-2 " +
 													item.bgcolor
 												}
+												key={item.announcement_id}
 											>
 												<a href='404' target='_blank'>
 													<div className='flex flex-row'>

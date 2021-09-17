@@ -2,12 +2,11 @@ import { loadGetInitialProps } from "next/dist/shared/lib/utils"
 import Head from "next/head"
 import Image from "next/image"
 import Link from "next/link"
-import { useEffect } from "react"
+import { useEffect, cloneElement } from "react"
 import useSWR from "swr"
 
 import CalendarCell from "./calendarCell"
 import { useState } from "react"
-import { cloneElement } from "react"
 
 export default function CalendarBlock({ session }) {
 	const [thisDate, setthisDate] = useState(new Date())
@@ -163,9 +162,9 @@ export default function CalendarBlock({ session }) {
 					<div className='text-2xs bg-white border-b-2'>Sat</div>
 					<div className='text-2xs bg-white border-b-2'>Sun</div>
 					{thisDateDatas.CalendarCellArray
-						? thisDateDatas.CalendarCellArray.map((item, key) => {
-								return item
-						  })
+						? thisDateDatas.CalendarCellArray.map((item, key) =>
+								cloneElement(item, { key })
+						  )
 						: null}
 				</div>
 			</div>
