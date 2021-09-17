@@ -1,4 +1,4 @@
-export default function announcementBlock({ announcementData, link }) {
+export default function AnnouncementBlock({ announcementData, link }) {
 	return (
 		<div>
 			<div

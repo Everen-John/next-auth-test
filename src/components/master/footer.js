@@ -3,7 +3,7 @@ import Head from "next/head"
 import Image from "next/image"
 import Link from "next/link"
 
-export default function Component({ session }) {
+export default function Footer({ session }) {
 	return (
 		<div className=''>
 			<footer className='bg-gray-100 p-6'>

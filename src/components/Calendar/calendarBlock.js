@@ -9,7 +9,7 @@ import CalendarCell from "./calendarCell"
 import { useState } from "react"
 import { cloneElement } from "react"
 
-export default function calendarBlock({ session }) {
+export default function CalendarBlock({ session }) {
 	const [thisDate, setthisDate] = useState(new Date())
 	const [thisDateDatas, setthisDateDatas] = useState({})
 

@@ -5,7 +5,7 @@ import Link from "next/link"
 import AnnouncementBlock from "./announcementBlock"
 import { useState } from "react"
 
-export default function calendarCell({
+export default function CalendarCell({
 	dayNum,
 	announcementDatas,
 	calendarDatas,

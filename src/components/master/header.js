@@ -4,7 +4,7 @@ import Image from "next/image"
 import Link from "next/link"
 import { signIn, signOut } from "next-auth/react"
 
-export default function Component({ session }) {
+export default function Header({ session }) {
 	return (
 		<div className='bg-gray-100 w-full flex p-3'>
 			<h1 className='flex-grow text-2xl'>Eren</h1>
