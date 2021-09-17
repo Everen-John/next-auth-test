@@ -1,6 +1,11 @@
 module.exports = {
-	mode: "jit",
-	purge: ["./pages/**/*.{js,ts,jsx,tsx}", "./components/**/*.{js,ts,jsx,tsx}"],
+	purge: {
+		content: [
+			"./pages/**/*.{js,ts,jsx,tsx,html}",
+			"./components/**/*.{js,ts,jsx,tsx,html}",
+		],
+		safelist: [/bg-red/, /bg-yellow/, /bg-green/],
+	},
 	darkMode: false, // or 'media' or 'class'
 	theme: {
 		fontSize: {
