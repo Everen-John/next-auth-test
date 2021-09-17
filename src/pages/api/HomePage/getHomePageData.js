@@ -2,7 +2,8 @@ import clientPromise from "../../../lib/mongodb"
 import { ObjectId } from "bson"
 
 export default async function getHomePageData(req, res) {
-	let monthSelected = req.body
+	let monthSelected = req.body.month
+	let user = req.body.user
 
 	const client = await clientPromise
 
@@ -14,7 +15,7 @@ export default async function getHomePageData(req, res) {
 	var pipeline = [
 		{
 			$match: {
-				_id: new ObjectId("613daad6f1c942e1a2cada63"),
+				_id: new ObjectId(user),
 			},
 		},
 		{

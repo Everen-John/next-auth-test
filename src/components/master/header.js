@@ -7,7 +7,7 @@ import { signIn, signOut } from "next-auth/react"
 export default function Component({ session }) {
 	return (
 		<div className='bg-gray-100 w-full flex p-3'>
-			<h1 className='flex-grow  text-4xl'>Eren</h1>
+			<h1 className='flex-grow text-2xl'>Eren</h1>
 			{session ? (
 				<div className='flex flex-row'>
 					<img

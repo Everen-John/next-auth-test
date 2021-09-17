@@ -6,19 +6,27 @@ import AnnouncementBlock from "./announcementBlock"
 import { useState } from "react"
 
 export default function calendarCell({
-	children,
 	dayNum,
 	announcementDatas,
 	calendarDatas,
+	isToday,
 }) {
 	const [showModal, setShowModal] = useState(false)
-	console.log(announcementDatas)
+	console.log(isToday)
 	return (
 		<div
 			className='border-solid border-b-2 p-1 h-20 bg-white'
 			onClick={(e) => setShowModal(!showModal)}
 		>
-			<div className='text-xs'>{dayNum}</div>
+			<div
+				className={
+					isToday
+						? "pl-1 pr-1 inline text-2xs bg-green-600 rounded-full text-white"
+						: "pl-1 pr-1 inline text-2xs"
+				}
+			>
+				{dayNum}
+			</div>
 			{announcementDatas
 				? announcementDatas.map((item) => (
 						<AnnouncementBlock announcementData={item} />
@@ -27,8 +35,8 @@ export default function calendarCell({
 
 			{showModal ? (
 				<>
-					<div className='justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none'>
-						<div className='relative w-auto my-6 mx-auto max-w-3xl'>
+					<div className='justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none '>
+						<div className='relative w-full my-6 mx-auto max-w-3xl'>
 							{/*content*/}
 							<div className='border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none'>
 								{/*header*/}
@@ -64,13 +72,19 @@ export default function calendarCell({
 														<div className='pl-2 text-xl flex-grow font-bold'>
 															{item.announcement_title}
 														</div>
-														<div className='pr-2 text-xs self-center italic'>
+														<div className='pr-2 text-2xs self-center italic'>
 															{item.class_name}
 														</div>
 													</div>
 
 													<div className='pl-2 text-xs'>
 														{item.announcement_description}
+													</div>
+													<div className='pl-2 text-3xs'>
+														classes_id: {item.classes_id}
+													</div>
+													<div className='pl-2 text-3xs'>
+														announcement_id: {item.announcement_id}
 													</div>
 												</a>
 											</div>

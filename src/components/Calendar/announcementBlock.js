@@ -3,7 +3,7 @@ export default function announcementBlock({ announcementData, link }) {
 		<div>
 			<div
 				className={
-					"pl-2 truncate text-xs text-white rounded-md " +
+					"pl-1 truncate text-3xs text-white rounded-l " +
 					announcementData.bgcolor
 				}
 			>

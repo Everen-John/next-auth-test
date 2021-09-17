@@ -11,8 +11,7 @@ export default function HomePage({ client }) {
 
 	return (
 		<Layout session={session}>
-			<h1 className='text-2xl'>Content Here</h1>
-			<CalendarBlock />
+			<CalendarBlock session={session} />
 		</Layout>
 	)
 }
