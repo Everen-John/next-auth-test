@@ -87,7 +87,7 @@ export default function CalendarCell({
 														{item.announcement_description}
 													</div>
 													<div className='pl-2 text-3xs'>
-														classes_id: {item.classes_id}
+														classes_id: {item.intake_id}
 													</div>
 													<div className='pl-2 text-3xs'>
 														announcement_id: {item.announcement_id}

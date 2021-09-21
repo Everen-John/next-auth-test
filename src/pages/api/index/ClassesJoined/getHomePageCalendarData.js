@@ -1,4 +1,4 @@
-import clientPromise from "../../../lib/mongodb"
+import clientPromise from "../../../../lib/mongodb"
 import { ObjectId } from "bson"
 
 export default async function getHomePageData(req, res) {
@@ -15,7 +15,7 @@ export default async function getHomePageData(req, res) {
 	var pipeline = [
 		{
 			$match: {
-				_id: new ObjectId(user),
+				_id: new ObjectId("613daad6f1c942e1a2cada63"),
 			},
 		},
 		{
@@ -72,8 +72,21 @@ export default async function getHomePageData(req, res) {
 			},
 		},
 		{
+			$lookup: {
+				from: "class",
+				foreignField: "_id",
+				localField: "intakes_data.class_oID",
+				as: "class_data",
+			},
+		},
+		{
+			$unwind: {
+				path: "$class_data",
+			},
+		},
+		{
 			$addFields: {
-				intake_name: "$intakes_data.intake_name",
+				intake_name: "$class_data.class_name",
 				announcement_title: "$announcement_data.announcement_Title",
 				announcement_description: "$announcement_data.announcement_description",
 				bgcolor: "$announcement_data.bgcolor",
@@ -109,12 +122,12 @@ export default async function getHomePageData(req, res) {
 				},
 				announcements: {
 					$push: {
-						intake_name: "$intake_name",
+						class_name: "$intake_name",
 						announcement_title: "$announcement_title",
 						announcement_description: "announcement_description",
 						bgcolor: "$bgcolor",
 						month: "$month",
-						intakes_id: "$intakes_id",
+						intake_id: "$intakes_id",
 						announcement_id: "$announcement_id",
 					},
 				},
