@@ -31,7 +31,7 @@ export default function ClassesJoinedBlock({
 					<div className=' flex justify-center p-1'>
 						<button onClick={(e) => btnJoinIntake()}>
 							<div>
-								<Image src='/plus.svg' width={120} height={120} />
+								<Image src='/Plus.svg' width={120} height={120} />
 							</div>
 						</button>
 					</div>

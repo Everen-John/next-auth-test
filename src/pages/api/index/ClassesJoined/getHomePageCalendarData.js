@@ -90,10 +90,10 @@ export default async function getHomePageData(req, res) {
 				announcement_title: "$announcement_data.announcement_Title",
 				announcement_description: "$announcement_data.announcement_description",
 				bgcolor: "$announcement_data.bgcolor",
-				announcement_deadline: "$announcement_data.announcement_deadline",
+				publish_time: "$announcement_data.publish_time",
 				month: {
 					$month: {
-						date: "$announcement_data.announcement_deadline",
+						date: "$announcement_data.publish_time",
 					},
 				},
 			},
@@ -105,7 +105,7 @@ export default async function getHomePageData(req, res) {
 				announcement_id: "$announcements",
 				announcement_title: 1.0,
 				announcement_description: 1.0,
-				announcement_deadline: 1.0,
+				publish_time: 1.0,
 				bgcolor: 1.0,
 				month: 1.0,
 			},
@@ -118,7 +118,7 @@ export default async function getHomePageData(req, res) {
 		{
 			$group: {
 				_id: {
-					$dayOfMonth: "$announcement_deadline",
+					$dayOfMonth: "$publish_time",
 				},
 				announcements: {
 					$push: {
