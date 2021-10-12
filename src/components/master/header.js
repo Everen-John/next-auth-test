@@ -7,7 +7,10 @@ import { signIn, signOut } from "next-auth/react"
 export default function Header({ session }) {
 	return (
 		<div className='bg-gray-100 w-full flex p-3'>
-			<h1 className='flex-grow text-2xl'>Eren</h1>
+			<Link href='/'>
+				<h1 className='flex-grow text-2xl'>Eren</h1>
+			</Link>
+
 			{session ? (
 				<div className='flex flex-row'>
 					<img

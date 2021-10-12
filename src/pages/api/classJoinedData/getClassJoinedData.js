@@ -4,7 +4,7 @@ import { ObjectId } from "bson"
 export default async function getHomePageData(req, res) {
 	let monthSelected = req.body.month
 	let user = req.body.user
-	let classid = req.body.classid
+	let intakeid = req.body.intakeid
 
 	const client = await clientPromise
 
@@ -16,7 +16,7 @@ export default async function getHomePageData(req, res) {
 	var pipeline = [
 		{
 			$match: {
-				_id: new ObjectId("6140115086beabb9ec5be370"),
+				_id: new ObjectId(intakeid),
 			},
 		},
 		{
