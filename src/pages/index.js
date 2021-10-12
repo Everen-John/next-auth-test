@@ -15,6 +15,7 @@ export default function HomePage({ client }) {
 	const { data: session } = useSession()
 	const [calendarLoading, setcalendarLoading] = useState(false)
 	const [thisDate, setthisDate] = useState(new Date())
+	let dateForAPI = new Date(thisDate.getFullYear(), thisDate.getMonth(), 1)
 	const [thisDateDatas, setthisDateDatas] = useState({})
 	const [classesJoinedLoading, setclassesJoinedLoading] = useState(false)
 	const [classesJoinedData, setclassesJoinedData] = useState()
@@ -92,10 +93,11 @@ export default function HomePage({ client }) {
 	}
 
 	const changeMonth = (e) => {
-		if (e.target.id == "arrow_left") {
+		console.log(e.currentTarget.id)
+		if (e.currentTarget.id == "btn_arrow_left") {
 			let newDate = new Date(thisDate.setMonth(thisDate.getMonth() - 1))
 			setthisDate(newDate)
-		} else if ((e.target.id = "arrow_right")) {
+		} else if (e.currentTarget.id == "btn_arrow_right") {
 			let newDate = new Date(thisDate.setMonth(thisDate.getMonth() + 1))
 			setthisDate(newDate)
 		}
@@ -115,7 +117,8 @@ export default function HomePage({ client }) {
 				redirect: "follow", // manual, *follow, error
 				referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
 				body: JSON.stringify({
-					month: thisDate.getMonth() + 1,
+					month: dateForAPI.getMonth() + 1,
+					year: dateForAPI.getFullYear(),
 					user: session.user.id,
 				}), // body data type must match "Content-Type" header
 			}).then((res) => res.json())
@@ -186,6 +189,9 @@ export default function HomePage({ client }) {
 
 	//EFFECTS////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	useEffect(() => {
+		console.log(thisDate)
+		dateForAPI = new Date(thisDate.getFullYear(), thisDate.getMonth(), 1)
+		console.log(dateForAPI)
 		getSessionAndDate()
 	}, [session, thisDate])
 

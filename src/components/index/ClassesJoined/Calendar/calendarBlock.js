@@ -3,10 +3,8 @@ import Head from "next/head"
 import Image from "next/image"
 import Link from "next/link"
 import { useEffect, cloneElement } from "react"
-import useSWR from "swr"
 
-import CalendarCell from "./calendarCell"
-import { useState } from "react"
+import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/solid"
 
 export default function CalendarBlock({
 	session,
@@ -32,22 +30,20 @@ export default function CalendarBlock({
 					<h2 className='text-sm  p-1 text-white flex-grow'>
 						{thisDateDatas.monthYearName}
 					</h2>
-					<div className='self-center' onClick={changeMonth}>
-						<Image
-							id='arrow_left'
-							src='/arrow-left.svg'
-							width={28}
-							height={28}
-						/>
+					<div
+						id='btn_arrow_left'
+						className='self-center cursor-pointer'
+						onClick={changeMonth}
+					>
+						<ChevronLeftIcon className='h-8 w-8 text-white hover:text-green-300' />
 					</div>
 
-					<div className='self-center' onClick={changeMonth}>
-						<Image
-							id='arrow_right'
-							src='/arrow-right.svg'
-							width={28}
-							height={28}
-						/>
+					<div
+						id='btn_arrow_right'
+						className='self-center cursor-pointer'
+						onClick={changeMonth}
+					>
+						<ChevronRightIcon className='h-8 w-8 text-white hover:text-green-300' />
 					</div>
 				</div>
 				<div className='grid grid-cols-7 bg-gray-100'>
@@ -60,7 +56,7 @@ export default function CalendarBlock({
 					<div className='text-2xs bg-white border-b-2'>Sun</div>
 					{thisDateDatas.CalendarCellArray
 						? thisDateDatas.CalendarCellArray.map((item, key) =>
-								cloneElement(item, { key })
+								cloneElement(item, (key = { key }))
 						  )
 						: null}
 				</div>

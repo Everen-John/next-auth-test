@@ -3,6 +3,7 @@ import { ObjectId } from "bson"
 
 export default async function getHomePageData(req, res) {
 	let monthSelected = req.body.month
+	let yearSelected = req.body.year
 	let user = req.body.user
 
 	const client = await clientPromise
@@ -108,11 +109,13 @@ export default async function getHomePageData(req, res) {
 				publish_time: 1.0,
 				bgcolor: 1.0,
 				month: 1.0,
+				year: { $year: "$publish_time" },
 			},
 		},
 		{
 			$match: {
 				month: monthSelected,
+				year: yearSelected,
 			},
 		},
 		{

@@ -1,4 +1,5 @@
 module.exports = {
+	important: true,
 	purge: {
 		content: [
 			"./src/pages/**/*.{js,ts,jsx,tsx,html}",
@@ -24,6 +25,23 @@ module.exports = {
 			"5xl": "3rem",
 			"6xl": "4rem",
 			"7xl": "5rem",
+		},
+		minWidth: {
+			0: "0",
+			"1/8": "12.5%",
+			"1/4": "25%",
+			"1/2": "50%",
+			"3/4": "75%",
+			"7/8": "87.5%",
+			full: "100%",
+		},
+		maxWidth: {
+			0: "0",
+			"1/8": "12.5%",
+			"1/4": "25%",
+			"1/2": "50%",
+			"3/4": "75%",
+			full: "100%",
 		},
 		extend: {},
 	},

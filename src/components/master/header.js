@@ -8,7 +8,9 @@ export default function Header({ session }) {
 	return (
 		<div className='bg-gray-100 w-full flex p-3'>
 			<Link href='/'>
-				<h1 className='flex-grow text-2xl'>Eren</h1>
+				<h1 className='flex-grow text-2xl cursor-pointer hover:text-green-700'>
+					Eren
+				</h1>
 			</Link>
 
 			{session ? (

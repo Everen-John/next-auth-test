@@ -4,6 +4,7 @@ import { useState, useEffect } from "react"
 import Image from "next/image"
 
 import Layout from "../../components/master/layout"
+import ClassJoinedContentBlock from "../../components/intakeid/classJoinedContentBlock"
 
 export default function joinedClassView() {
 	const { data: session, status } = useSession()
@@ -50,38 +51,13 @@ export default function joinedClassView() {
 		<Layout session={session}>
 			<div className='bg-green-500'>
 				<p>ClassId: {intakeid}</p>
+
 				{loading ? (
 					<div className='bg-indigo-400 flex justify-center p-14'>
 						<Image src='/Loaders/oval.svg' width={150} height={150} />
 					</div>
 				) : (
-					<div>
-						{intakeJoined.yearlyItems.map((yearlyItem, key) => {
-							return (
-								<div>
-									<div className='flex flex-row' key={key}>
-										<div className=' m-auto border-b-4 border-gray-700 border-dotted flex-grow-0 w-4'></div>
-										<div className='text-gray-700 text-xl'>[</div>
-										<div className=' text-xl text-gray-700 '>
-											{yearlyItem.year}
-										</div>
-										<div className='text-gray-700 text-xl'>]</div>
-										<div className=' m-auto border-b-4 border-gray-700 border-dotted flex-grow'></div>
-									</div>
-									{yearlyItem.yearedData.map((yearedData, key) => {
-										return (
-											<div key={key}>
-												<div>week Number: {yearedData.weekNumber}</div>
-												{yearedData.weekItems.map((weekItem, key) => {
-													return <h2>{weekItem.type}</h2>
-												})}
-											</div>
-										)
-									})}
-								</div>
-							)
-						})}
-					</div>
+					<ClassJoinedContentBlock intakeJoined={intakeJoined} />
 				)}
 			</div>
 		</Layout>

@@ -21,15 +21,15 @@ export default async function getHomePageData(req, res) {
 		},
 		{
 			$project: {
-				student_oIDs: 1,
-				teacher_oIDs: 1,
-				quiz_oIDs: 1,
-				content_oIDs: 1,
-				files_oIDs: 1,
-				announcement_oIDs: 1,
-				intake_code: 1,
-				intake_name: 1,
-				date_created: 1,
+				student_oIDs: 1.0,
+				teacher_oIDs: 1.0,
+				quiz_oIDs: 1.0,
+				content_oIDs: 1.0,
+				files_oIDs: 1.0,
+				announcement_oIDs: 1.0,
+				intake_code: 1.0,
+				intake_name: 1.0,
+				date_created: 1.0,
 			},
 		},
 		{
@@ -37,18 +37,18 @@ export default async function getHomePageData(req, res) {
 				GeneralData: [
 					{
 						$project: {
-							date_created: 1,
-							student_oIDs: 1,
-							teacher_oIDs: 1,
-							intake_code: 1,
-							intake_name: 1,
+							date_created: 1.0,
+							student_oIDs: 1.0,
+							teacher_oIDs: 1.0,
+							intake_code: 1.0,
+							intake_name: 1.0,
 						},
 					},
 				],
 				Quizes: [
 					{
 						$project: {
-							quiz_oIDs: 1,
+							quiz_oIDs: 1.0,
 						},
 					},
 					{
@@ -79,7 +79,7 @@ export default async function getHomePageData(req, res) {
 				Contents: [
 					{
 						$project: {
-							content_oIDs: 1,
+							content_oIDs: 1.0,
 						},
 					},
 					{
@@ -110,7 +110,7 @@ export default async function getHomePageData(req, res) {
 				Files: [
 					{
 						$project: {
-							files_oIDs: 1,
+							files_oIDs: 1.0,
 						},
 					},
 					{
@@ -141,7 +141,7 @@ export default async function getHomePageData(req, res) {
 				Announcements: [
 					{
 						$project: {
-							announcement_oIDs: 1,
+							announcement_oIDs: 1.0,
 						},
 					},
 					{
@@ -178,7 +178,7 @@ export default async function getHomePageData(req, res) {
 		},
 		{
 			$project: {
-				GeneralData: 1,
+				GeneralData: 1.0,
 				Items: {
 					$concatArrays: ["$Quizes", "$Contents", "$Files", "$Announcements"],
 				},
@@ -212,15 +212,15 @@ export default async function getHomePageData(req, res) {
 						{
 							$dayOfWeek: "$publish_estimate",
 						},
-						1,
+						1.0,
 					],
 				},
 			},
 		},
 		{
 			$project: {
-				generalData: 1,
-				items: 1,
+				generalData: 1.0,
+				items: 1.0,
 				weekNumber: "$_id",
 				yearNumber: {
 					$year: "$publish_estimate",
@@ -232,7 +232,7 @@ export default async function getHomePageData(req, res) {
 					$subtract: [
 						"$publish_estimate",
 						{
-							$multiply: ["$dayOfWeek", 24, 3600000],
+							$multiply: ["$dayOfWeek", 24.0, 3600000.0],
 						},
 					],
 				},
@@ -242,10 +242,10 @@ export default async function getHomePageData(req, res) {
 						{
 							$multiply: [
 								{
-									$subtract: [6, "$dayOfWeek"],
+									$subtract: [6.0, "$dayOfWeek"],
 								},
-								24,
-								3600000,
+								24.0,
+								3600000.0,
 							],
 						},
 					],
@@ -253,11 +253,7 @@ export default async function getHomePageData(req, res) {
 			},
 		},
 		{
-			$sort: {
-				yearNumber: -1,
-				monthNumber: 1,
-				weekNumber: 1,
-			},
+			$sort: { _id: 1 },
 		},
 		{
 			$group: {
@@ -277,6 +273,11 @@ export default async function getHomePageData(req, res) {
 			},
 		},
 		{
+			$sort: {
+				_id: 1.0,
+			},
+		},
+		{
 			$group: {
 				_id: "$generalData",
 				yearlyItems: {
@@ -291,7 +292,5 @@ export default async function getHomePageData(req, res) {
 
 	var cursor = await collection.aggregate(pipeline, options)
 	var finalData = await cursor.toArray()
-	console.log("Hi!")
-	console.log(finalData)
 	res.status(200).json(finalData[0])
 }
