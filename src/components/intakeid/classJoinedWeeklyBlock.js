@@ -4,7 +4,7 @@ import Image from "next/image"
 import Link from "next/link"
 import ClassJoinedCellAnnouncement from "./classJoinedCellAnnouncement"
 import ClassJoinedCellContent from "./classJoinedCellContent"
-import ClassJoinedCellFile from "./classJoinedCellFiles"
+import ClassJoinedCellFiles from "./classJoinedCellFiles"
 import ClassJoinedCellQuiz from "./classJoinedCellQuiz"
 
 export default function ClassJoinedWeeklyBlock({ yearedData, setFolded }) {

@@ -5,6 +5,14 @@ module.exports = {
 		return config
 	},
 	images: {
-		domains: ["via.placeholder.com"],
+		domains: ["via.placeholder.com", "https://lh3.googleusercontent.com"],
 	},
+	// async rewrites() {
+	// 	return [
+	// 		{
+	// 			source: "/:path*",
+	// 			destination: "https://s3.ap-southeast-1.amazonaws.com/next-eren",
+	// 		},
+	// 	]
+	// },
 }
