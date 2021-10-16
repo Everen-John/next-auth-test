@@ -9,12 +9,6 @@ const multerS3 = require("multer-s3")
 const fs = require("fs")
 const path = require("path")
 
-let s3 = new aws.S3({
-	accessKeyId: process.env.ACCESS_KEY,
-	secretAccessKey: process.env.SECRET_KEY,
-	region: process.env.REGION,
-})
-
 export const config = {
 	api: {
 		bodyParser: false,
@@ -50,11 +44,17 @@ export default async (req, res) => {
 }
 
 const uploadToS3 = async (fileData, intake_oID) => {
+	let s3 = new aws.S3({
+		accessKeyId: process.env.ACCESS_KEY,
+		secretAccessKey: process.env.SECRET_KEY,
+		region: process.env.REGION,
+	})
+
 	return new Promise(async (resolve, reject) => {
 		let dateOfNow = new Date().toLocaleString("en-GB")
 		const fileStream = fs.createReadStream(`${fileData.files.media.path}`)
 		const S3Params = {
-			Bucket: `${process.env.BUCKET_NAME}/${intake_oID}/file_name`,
+			Bucket: `${process.env.BUCKET_NAME}/public/${intake_oID}/file_name`,
 			Body: fileStream,
 			Key: `${path.parse(fileData.files.media.name).name}_${dateOfNow.replace(
 				/[^\w\s]/gi,
@@ -104,11 +104,12 @@ const uploadFileDataToMongoDB = async (S3Results, intake_oID) => {
 			)
 			console.log(intake_oID)
 			console.log(intakeData)
+			await session.endSession()
+			resolve()
 		}, transactionOptions)
 	} catch (e) {
 		console.log(e)
+		reject()
 	} finally {
-		await session.endSession()
-		return
 	}
 }
