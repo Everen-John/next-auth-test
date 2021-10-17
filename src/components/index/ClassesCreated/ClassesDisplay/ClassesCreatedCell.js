@@ -18,7 +18,7 @@ export default function ClassesCell({ classJoinedData }) {
 						src={
 							classJoinedData.icon ? icon : "https://via.placeholder.com/150"
 						}
-						width={120}
+						width={128}
 						height={130}
 						objectFit='cover'
 						className='rounded-xl'

@@ -6,7 +6,7 @@ import Image from "next/image"
 import Layout from "../../components/master/layout"
 import ClassJoinedContentBlock from "../../components/intakeid/classJoinedContentBlock"
 
-export default function joinedClassView() {
+export default function intakeid() {
 	const { data: session, status } = useSession()
 	const router = useRouter()
 	const [intakeJoined, setIntakeJoined] = useState()

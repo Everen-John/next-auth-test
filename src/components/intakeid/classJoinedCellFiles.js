@@ -23,11 +23,16 @@ export default function ClassJoinedCellFile({ weekItem }) {
 		minute: "2-digit",
 	})
 
-	const downloadFile = () => {
+	const downloadFile = async () => {
 		const anchorElement = anchorRef.current
 		anchorElement.setAttribute("href", weekItem.filesDatas.file_location)
 		anchorElement.setAttribute("download", "")
-		anchorElement.click()
+		return new Promise((resolve, reject) => {
+			resolve(anchorElement.click())
+		}).then((value) => {
+			anchorElement.setAttribute("href", "")
+			anchorElement.setAttribute("download", "")
+		})
 	}
 	return (
 		<div className='bg-gray-200 p-2 m-2 rounded-md' onClick={downloadFile}>

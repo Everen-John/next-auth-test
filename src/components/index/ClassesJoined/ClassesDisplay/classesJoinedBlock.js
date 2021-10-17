@@ -1,17 +1,15 @@
 import ClassesJoinedCell from "./classesJoinedCell"
 import Image from "next/image"
 
+import { PlusIcon } from "@heroicons/react/solid"
+
 export default function ClassesJoinedBlock({
 	classesJoinedData,
-	setclassesJoinedData,
-	classesJoinedLoading,
-	setclassesJoinedLoading,
-	txtJoinIntake,
 	settxtJoinIntake,
 	btnJoinIntake,
 }) {
 	return (
-		<div className='bg-green-600'>
+		<div className='bg-green-600 mb-2'>
 			<h2 className='text-base pt-2 pl-2 text-white'>Classes You've Joined</h2>
 			<div className='overflow-x-auto whitespace-nowrap'>
 				<div className='bg-white border border-solid rounded-md h-44 w-36 inline-block m-2 shadow-xl'>
@@ -31,7 +29,7 @@ export default function ClassesJoinedBlock({
 					<div className=' flex justify-center p-1'>
 						<button onClick={(e) => btnJoinIntake()}>
 							<div>
-								<Image src='/Plus.svg' width={120} height={120} />
+								<PlusIcon className='h-32 w-16 text-green-600' />
 							</div>
 						</button>
 					</div>

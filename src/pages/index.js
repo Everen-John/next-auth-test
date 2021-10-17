@@ -2,24 +2,29 @@ import Head from "next/head"
 import Image from "next/image"
 import Link from "next/link"
 import { useSession } from "next-auth/react"
-import { useState, useEffect } from "react"
+import { getSession } from "next-auth/react"
+import { useState, useEffect, useRef } from "react"
 
 import Layout from "../components/master/layout"
 
 import CalendarBlock from "../components/index/ClassesJoined/Calendar/calendarBlock"
 import ClassesJoined from "../components/index/ClassesJoined/ClassesDisplay/classesJoinedBlock"
 import CalendarCell from "../components/index/ClassesJoined/Calendar/calendarCell"
+import ClassesCreated from "../components/index/ClassesCreated/ClassesDisplay/ClassesCreatedBlock"
 
-export default function HomePage({ client }) {
+export default function HomePage({}) {
 	//STATES////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	const { data: session } = useSession()
-	const [calendarLoading, setcalendarLoading] = useState(false)
 	const [thisDate, setthisDate] = useState(new Date())
-	let dateForAPI = new Date(thisDate.getFullYear(), thisDate.getMonth(), 1)
-	const [thisDateDatas, setthisDateDatas] = useState({})
-	const [classesJoinedLoading, setclassesJoinedLoading] = useState(false)
+
+	const [calendarLoading, setCalendarLoading] = useState(false)
+	const [thisDateJoinedDatas, setthisDateJoinedDatas] = useState({})
 	const [classesJoinedData, setclassesJoinedData] = useState()
+	const [classesCreatedData, setClassesCreatedData] = useState()
+
 	const [txtJoinIntake, settxtJoinIntake] = useState()
+
+	let dateForAPI = new Date(thisDate.getFullYear(), thisDate.getMonth(), 1)
 
 	//CONSTANTS////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	const MONTHNAMES = [
@@ -38,9 +43,49 @@ export default function HomePage({ client }) {
 	]
 
 	//FUNCTIONS////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	const changeMonth = (e) => {
+		console.log("Ran Change Month")
+		console.log(e.currentTarget.id)
+		setCalendarLoading(true)
+		if (e.currentTarget.id == "btn_arrow_left") {
+			let newDate = new Date(thisDate.setMonth(thisDate.getMonth() - 1))
+			setthisDate(newDate)
+		} else if (e.currentTarget.id == "btn_arrow_right") {
+			let newDate = new Date(thisDate.setMonth(thisDate.getMonth() + 1))
+			setthisDate(newDate)
+		}
+		setCalendarLoading(false)
+	}
+
+	const getSessionAndDate = async () => {
+		console.log("Ran getSessionAndDate")
+		if (session) {
+			let res = await fetch("api/index/ClassesJoined/getHomePageCalendarData", {
+				method: "POST", // *GET, POST, PUT, DELETE, etc.
+				mode: "cors", // no-cors, *cors, same-origin
+				cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
+				credentials: "same-origin", // include, *same-origin, omit
+				headers: {
+					"Content-Type": "application/json",
+				},
+				redirect: "follow", // manual, *follow, error
+				referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+				body: JSON.stringify({
+					month: dateForAPI.getMonth() + 1,
+					year: dateForAPI.getFullYear(),
+					user: session.user.id,
+				}), // body data type must match "Content-Type" header
+			}).then((res) => res.json())
+			console.log("sessionAndDateData: ", res)
+			getDateData(res)
+		} else {
+			console.log("No Session!")
+		}
+	}
+
 	const getDateData = async (res) => {
+		console.log("Ran getDateData")
 		let results = await JSON.parse(JSON.stringify(res))
-		let res2 = JSON.parse(JSON.stringify(results))
 		let today = new Date()
 		let thisMonth = thisDate.getMonth()
 		let thisYear = thisDate.getFullYear()
@@ -80,7 +125,8 @@ export default function HomePage({ client }) {
 			)
 		}
 
-		setthisDateDatas({
+		setthisDateJoinedDatas({
+			rawData: results,
 			thisMonth,
 			thisYear,
 			thisMonthData,
@@ -92,46 +138,9 @@ export default function HomePage({ client }) {
 		})
 	}
 
-	const changeMonth = (e) => {
-		console.log(e.currentTarget.id)
-		if (e.currentTarget.id == "btn_arrow_left") {
-			let newDate = new Date(thisDate.setMonth(thisDate.getMonth() - 1))
-			setthisDate(newDate)
-		} else if (e.currentTarget.id == "btn_arrow_right") {
-			let newDate = new Date(thisDate.setMonth(thisDate.getMonth() + 1))
-			setthisDate(newDate)
-		}
-	}
-
-	const getSessionAndDate = async () => {
-		if (session) {
-			setcalendarLoading(true)
-			let res = await fetch("api/index/ClassesJoined/getHomePageCalendarData", {
-				method: "POST", // *GET, POST, PUT, DELETE, etc.
-				mode: "cors", // no-cors, *cors, same-origin
-				cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
-				credentials: "same-origin", // include, *same-origin, omit
-				headers: {
-					"Content-Type": "application/json",
-				},
-				redirect: "follow", // manual, *follow, error
-				referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
-				body: JSON.stringify({
-					month: dateForAPI.getMonth() + 1,
-					year: dateForAPI.getFullYear(),
-					user: session.user.id,
-				}), // body data type must match "Content-Type" header
-			}).then((res) => res.json())
-			console.log(res)
-			getDateData(res)
-		} else {
-		}
-		setcalendarLoading(false)
-	}
-
 	const getClassesJoined = async () => {
+		console.log("Ran getClassesJoined")
 		if (session) {
-			setclassesJoinedLoading(true)
 			let res = await fetch("api/index/ClassesJoined/getHomePageClassesData", {
 				method: "POST", // *GET, POST, PUT, DELETE, etc.
 				mode: "cors", // no-cors, *cors, same-origin
@@ -146,14 +155,15 @@ export default function HomePage({ client }) {
 					user: session.user.id,
 				}), // body data type must match "Content-Type" header
 			}).then((res) => res.json())
-			console.log(res)
+			console.log("GetClassesJoined Data", res)
 			setclassesJoinedData(res)
 		} else {
+			console.log("No Session!")
 		}
-		setclassesJoinedLoading(false)
 	}
 
 	const joinIntake = async () => {
+		console.log("Ran JoinIntake")
 		if (txtJoinIntake) {
 			let res = await fetch("api/index/ClassesJoined/joinIntake", {
 				method: "POST", // *GET, POST, PUT, DELETE, etc.
@@ -188,40 +198,41 @@ export default function HomePage({ client }) {
 	}
 
 	//EFFECTS////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	useEffect(() => {
+
+	useEffect(async () => {
 		console.log(thisDate)
 		dateForAPI = new Date(thisDate.getFullYear(), thisDate.getMonth(), 1)
 		console.log(dateForAPI)
-		getSessionAndDate()
+		await getSessionAndDate()
+		await getClassesJoined()
 	}, [session, thisDate])
 
-	useEffect(() => {
-		getClassesJoined()
-	}, [session])
-
+	//RETURN////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	return (
 		<Layout session={session}>
-			<CalendarBlock
-				session={session}
-				calendarLoading={calendarLoading}
-				setcalendarLoading={setcalendarLoading}
-				thisDate={thisDate}
-				setthisDate={setthisDate}
-				thisDateDatas={thisDateDatas}
-				setthisDateDatas={setthisDateDatas}
-				changeMonth={changeMonth}
-				getSessionAndDate={getSessionAndDate}
-			/>
+			<div>
+				{thisDateJoinedDatas ? (
+					<CalendarBlock
+						loading={calendarLoading}
+						thisDate={thisDate}
+						thisDateDatas={thisDateJoinedDatas}
+						changeMonth={changeMonth}
+					/>
+				) : null}
 
-			<ClassesJoined
-				classesJoinedData={classesJoinedData}
-				setclassesJoinedData={setclassesJoinedData}
-				classesJoinedLoading={classesJoinedLoading}
-				setclassesJoinedLoading={setclassesJoinedLoading}
-				txtJoinIntake={txtJoinIntake}
-				settxtJoinIntake={settxtJoinIntake}
-				btnJoinIntake={joinIntake}
-			/>
+				<ClassesJoined
+					classesJoinedData={classesJoinedData}
+					txtJoinIntake={txtJoinIntake}
+					settxtJoinIntake={settxtJoinIntake}
+					btnJoinIntake={joinIntake}
+				/>
+				<ClassesCreated
+					classesJoinedData={classesJoinedData}
+					txtJoinIntake={txtJoinIntake}
+					settxtJoinIntake={settxtJoinIntake}
+					btnJoinIntake={joinIntake}
+				/>
+			</div>
 		</Layout>
 	)
 }
