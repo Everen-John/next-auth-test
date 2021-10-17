@@ -14,7 +14,7 @@ import ClassesCreated from "../components/index/ClassesCreated/ClassesDisplay/Cl
 
 export default function HomePage({}) {
 	//STATES////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	const { data: session } = useSession()
+	const { data: session, status } = useSession()
 	const [thisDate, setthisDate] = useState(new Date())
 
 	const [calendarLoading, setCalendarLoading] = useState(false)
@@ -197,15 +197,47 @@ export default function HomePage({}) {
 		}
 	}
 
+	const getClassesCreatedData = async () => {
+		console.log("Ran getClassesCreatedData")
+		if (session) {
+			let res = await fetch(
+				"api/index/ClassesCreated/getHomePageClassesCreatedData",
+				{
+					method: "POST", // *GET, POST, PUT, DELETE, etc.
+					mode: "cors", // no-cors, *cors, same-origin
+					cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
+					credentials: "same-origin", // include, *same-origin, omit
+					headers: {
+						"Content-Type": "application/json",
+					},
+					redirect: "follow", // manual, *follow, error
+					referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+					body: JSON.stringify({
+						user: session.user.id,
+					}), // body data type must match "Content-Type" header
+				}
+			)
+				.then((res) => res.json())
+				.catch((e) => console.log(e))
+			console.log("GetClassesCreated Data", res)
+			setClassesCreatedData(res)
+		} else {
+			console.log("No Session!")
+		}
+	}
+
 	//EFFECTS////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	useEffect(async () => {
+		await getClassesJoined()
+		await getClassesCreatedData()
+	}, [status === "authenticated"])
 
 	useEffect(async () => {
 		console.log(thisDate)
 		dateForAPI = new Date(thisDate.getFullYear(), thisDate.getMonth(), 1)
 		console.log(dateForAPI)
 		await getSessionAndDate()
-		await getClassesJoined()
-	}, [session, thisDate])
+	}, [status === "authenticated", thisDate])
 
 	//RETURN////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	return (
@@ -227,7 +259,7 @@ export default function HomePage({}) {
 					btnJoinIntake={joinIntake}
 				/>
 				<ClassesCreated
-					classesJoinedData={classesJoinedData}
+					classesCreatedData={classesCreatedData}
 					txtJoinIntake={txtJoinIntake}
 					settxtJoinIntake={settxtJoinIntake}
 					btnJoinIntake={joinIntake}

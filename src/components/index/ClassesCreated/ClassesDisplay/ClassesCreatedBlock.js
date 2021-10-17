@@ -4,7 +4,7 @@ import Link from "next/link"
 import { PlusIcon } from "@heroicons/react/solid"
 
 export default function ClassesJoinedBlock({
-	classesJoinedData,
+	classesCreatedData,
 	settxtJoinIntake,
 	btnJoinIntake,
 }) {
@@ -23,9 +23,9 @@ export default function ClassesJoinedBlock({
 						</div>
 					</div>
 				</Link>
-				{classesJoinedData
-					? classesJoinedData.map((item, key) => (
-							<ClassesCreatedCell classJoinedData={item} key={key} />
+				{classesCreatedData
+					? classesCreatedData.map((item, key) => (
+							<ClassesCreatedCell classCreatedData={item} key={key} />
 					  ))
 					: null}
 			</div>
