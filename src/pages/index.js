@@ -11,6 +11,7 @@ import CalendarBlock from "../components/index/ClassesJoined/Calendar/calendarBl
 import ClassesJoined from "../components/index/ClassesJoined/ClassesDisplay/classesJoinedBlock"
 import CalendarCell from "../components/index/ClassesJoined/Calendar/calendarCell"
 import ClassesCreated from "../components/index/ClassesCreated/ClassesDisplay/ClassesCreatedBlock"
+import autoprefixer from "autoprefixer"
 
 export default function HomePage({}) {
 	//STATES////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -228,15 +229,23 @@ export default function HomePage({}) {
 
 	//EFFECTS////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	useEffect(async () => {
-		await getClassesJoined()
-		await getClassesCreatedData()
+		if (status === "authenticated") {
+			await getClassesJoined()
+			await getClassesCreatedData()
+		} else {
+			console.log("awaiting authentication!")
+		}
 	}, [status === "authenticated"])
 
 	useEffect(async () => {
-		console.log(thisDate)
-		dateForAPI = new Date(thisDate.getFullYear(), thisDate.getMonth(), 1)
-		console.log(dateForAPI)
-		await getSessionAndDate()
+		if (status === "authenticated") {
+			console.log(thisDate)
+			dateForAPI = new Date(thisDate.getFullYear(), thisDate.getMonth(), 1)
+			console.log(dateForAPI)
+			await getSessionAndDate()
+		} else {
+			console.log("awaiting authentication!")
+		}
 	}, [status === "authenticated", thisDate])
 
 	//RETURN////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

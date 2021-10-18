@@ -1,6 +1,7 @@
 import { useRouter } from "next/router"
 import { useSession } from "next-auth/react"
 import { useState, useEffect } from "react"
+import IntakeAccordian from "../../components/classid/intakeAccordian"
 import Image from "next/image"
 
 import Layout from "../../components/master/layout"
@@ -41,34 +42,29 @@ export default function classid() {
 		}
 	}
 	useEffect(async () => {
-		getIntakeJoinedData()
+		if (status === "authenticated") {
+			getIntakeJoinedData()
+		} else {
+			console.log("Awaiting authentication!")
+		}
 	}, [status === "authenticated"])
 
 	useEffect(async () => {
 		console.log(intakesInClass)
 	}, [intakesInClass])
 
-	// useEffect(
-	// 	(async) => {
-	// 		console.log(intakeJoined)
-	// 		console.log(intakeJoined ? "Contains Data" : "Does not contain Data")
-	// 	},
-	// 	[intakeJoined]
-	// )
-
 	return (
 		<Layout session={session}>
 			<div className='bg-green-500'>
 				<p>ClassId: {classid}</p>
-
-				{/* {loading ? (
-					<div className='bg-indigo-400 flex justify-center p-14'>
-						<Image src='/Loaders/oval.svg' width={150} height={150} />
-					</div>
-				) : (
-					<ClassJoinedContentBlock intakeJoined={intakeJoined} />
-				)} */}
 			</div>
+			{loading ? null : (
+				<IntakeAccordian
+					title={"Test"}
+					classid={classid}
+					content={intakesInClass}
+				/>
+			)}
 		</Layout>
 	)
 }

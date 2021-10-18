@@ -79,6 +79,7 @@ export default async function getHomePageData(req, res) {
 			$project: {
 				class_oID: "$intakeData.class_oID",
 				intake_oID: "$intakeData._id",
+				intake_name: "$intakeData.intake_name",
 				student_oIDs: "$intakeData.student_oIDs",
 				teacher_oIDs: "$intakeData.teacher_oIDs",
 				date_created: "$intakeData.date_created",

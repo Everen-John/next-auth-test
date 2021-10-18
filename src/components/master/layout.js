@@ -7,7 +7,7 @@ import Footer from "./footer"
 
 export default function Layout({ children, session }) {
 	return (
-		<div className=''>
+		<div className='bg-gray-900'>
 			<Header session={session} />
 			<main className=''>{children}</main>
 			<Footer />
