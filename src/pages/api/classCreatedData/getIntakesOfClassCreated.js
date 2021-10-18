@@ -51,6 +51,7 @@ export default async function getHomePageData(req, res) {
 		},
 		{
 			$project: {
+				class_name: "$classData.class_name",
 				intake_oIDs: "$classData.intake_oIDs",
 				_id: 0.0,
 			},
@@ -70,6 +71,7 @@ export default async function getHomePageData(req, res) {
 		},
 		{
 			$project: {
+				class_name: 1,
 				intakeData: {
 					$first: "$intake_data",
 				},
@@ -77,6 +79,7 @@ export default async function getHomePageData(req, res) {
 		},
 		{
 			$project: {
+				class_name: 1,
 				class_oID: "$intakeData.class_oID",
 				intake_oID: "$intakeData._id",
 				intake_name: "$intakeData.intake_name",

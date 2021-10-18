@@ -14,7 +14,7 @@ import "@uppy/drag-drop/dist/style.css"
 import "@uppy/core/dist/style.css"
 import "@uppy/dashboard/dist/style.css"
 
-import Layout from "../../components/master/layout"
+import Layout from "../../../../components/master/layout"
 
 const uppy = new Uppy({
 	meta: { type: "media" },
@@ -52,39 +52,24 @@ uppy.on("error", (error) => {
 export default function uploadFile() {
 	const { data: session, status } = useSession()
 	const router = useRouter()
-
-	useEffect(() => {
-		uppy.use(Form, {
-			target: "form",
-			resultName: "uppyResult",
-			getMetaFromForm: true,
-			addResultToForm: true,
-			multipleResults: false,
-			submitOnSuccess: false,
-			triggerUploadOnSubmit: false,
-		})
-	}, [])
+	const { classid, intakeid } = router.query
 
 	return (
 		<Layout session={session}>
-			<form>
-				<input
-					type='text'
-					name='file_title'
-					id='file_title'
-					placeholder='file title'
+			<div className='text-white'>intakeid: {intakeid}</div>
+			<div className='text-white'>classid: {classid}</div>
+
+			<div>
+				<Dashboard
+					uppy={uppy}
+					locale={{
+						strings: {
+							dropHereOr: "Drop here or %{browse}",
+							browse: "browse",
+						},
+					}}
 				/>
-			</form>
-			<Dashboard
-				id='upload'
-				uppy={uppy}
-				locale={{
-					strings: {
-						dropHereOr: "Drop here or %{browse}",
-						browse: "browse",
-					},
-				}}
-			/>
+			</div>
 		</Layout>
 	)
 }

@@ -16,7 +16,6 @@ export const config = {
 }
 
 export default async (req, res) => {
-	// console.log(req.files)
 	let intake_oID = "6140115086beabb9ec5be370"
 	const form = new formidable.IncomingForm()
 	form.uploadDir = "./public/uploads/"
@@ -28,6 +27,7 @@ export default async (req, res) => {
 				reject(err)
 				return
 			}
+			console.log(fields, files)
 			resolve({ fields, files })
 		})
 	})
@@ -35,10 +35,9 @@ export default async (req, res) => {
 		.then((S3Results) => {
 			console.log("At S3 Results")
 			console.log(S3Results)
-			uploadFileDataToMongoDB(S3Results, intake_oID)
+			console.log("Fields", S3Results.fields)
+			uploadFileDataToMongoDB(S3Results.results, intake_oID)
 		})
-	// console.log(fields)
-	// console.log(file)
 
 	res.status(200).send()
 }
@@ -62,7 +61,7 @@ const uploadToS3 = async (fileData, intake_oID) => {
 			)}${path.extname(fileData.files.media.name)}`,
 		}
 		var results = await s3.upload(S3Params).promise()
-		resolve(results)
+		resolve({ fields: fileData.fields, results })
 	})
 }
 
@@ -104,12 +103,12 @@ const uploadFileDataToMongoDB = async (S3Results, intake_oID) => {
 			)
 			console.log(intake_oID)
 			console.log(intakeData)
-			await session.endSession()
-			resolve()
 		}, transactionOptions)
 	} catch (e) {
 		console.log(e)
 		reject()
 	} finally {
+		await session.endSession()
+		resolve()
 	}
 }

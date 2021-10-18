@@ -8,11 +8,11 @@ export default function App({
 	Component,
 	pageProps: { session, ...pageProps },
 }) {
-	if (process.env.APP_MODE === "production") {
-		console.log = function () {
-			return false
-		}
-	}
+	// if (process.env.APP_MODE === "production") {
+	// 	console.log = function () {
+	// 		return false
+	// 	}
+	// }
 	return (
 		<SessionProvider session={session}>
 			<Component {...pageProps} />

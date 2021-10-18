@@ -6,7 +6,13 @@ import { useSession } from "next-auth/react"
 export default function ClassesCell({ classCreatedData }) {
 	console.log(classCreatedData)
 	return (
-		<Link href={"/Created/" + classCreatedData.classes_data._id}>
+		<Link
+			href={`/Created/${
+				classCreatedData.classes_data._id
+			}?class_name=${encodeURIComponent(
+				classCreatedData.classes_data.class_name
+			)}`}
+		>
 			<div className='bg-white border border-solid rounded-md h-44 w-36 inline-block m-2 shadow-xl'>
 				<div className='truncate text-xs pl-2 font-bold'>
 					{classCreatedData.classes_data.class_name}

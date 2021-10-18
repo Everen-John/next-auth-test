@@ -19,6 +19,7 @@ const setDefaultAccordianForTheFirstTime = (classid, content) => {
 }
 
 const setDefaultAccordianData = (newAccordianSelection) => {
+	console.log("newAccordianSelection", newAccordianSelection)
 	localStorage.setItem(
 		`classId${newAccordianSelection.class_oID}lastPickedAccordianMenu`,
 		JSON.stringify({
@@ -27,7 +28,7 @@ const setDefaultAccordianData = (newAccordianSelection) => {
 		})
 	)
 }
-export default function Accordion({ title, content, classid }) {
+export default function Accordion({ title, content, classid, loadIntakeData }) {
 	const [active, setActive] = useState(false)
 	const [height, setHeight] = useState("0px")
 	const [rotate, setRotate] = useState("transform duration-100 ease")
@@ -50,6 +51,7 @@ export default function Accordion({ title, content, classid }) {
 		console.log(AccordianMenuData)
 		setSelectedIntake(AccordianMenuData)
 		setDefaultAccordianData(AccordianMenuData)
+		loadIntakeData(AccordianMenuData.intake_oID)
 		setActive(!active)
 	}
 
@@ -68,7 +70,7 @@ export default function Accordion({ title, content, classid }) {
 				className='max-w-full pl-10 pr-10 py-2 box-border appearance-none cursor-pointer focus:outline-none flex items-center justify-between'
 				onClick={toggleAccordion}
 			>
-				<p className='inline-block text-footnote light'>
+				<p className='inline-block text-footnote light truncate'>
 					{selectedIntake.intake_name}
 				</p>
 				<ChevronDownIcon
@@ -81,7 +83,10 @@ export default function Accordion({ title, content, classid }) {
 				className='overflow-auto transition-max-height duration-200 ease-in-out'
 			>
 				{content.map((item, key) => (
-					<div className=' m-1 pt-1 pl-10 pr-10 pb-2 bg-gray-700' key={key}>
+					<div
+						className=' m-1 pt-1 pl-10 pr-10 pb-2 bg-gray-700 truncate'
+						key={key}
+					>
 						<button
 							value={JSON.stringify(item)}
 							onClick={handleAccordianMenuClicked}

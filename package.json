@@ -9,11 +9,13 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@animxyz/core": "^0.6.4",
     "@animxyz/react": "^0.6.4",
     "@heroicons/react": "^1.0.4",
     "@next-auth/mongodb-adapter": "0.0.2-next.276",
     "@uppy/core": "^2.1.0",
     "@uppy/dashboard": "^2.1.0",
+    "@uppy/form": "^2.0.4",
     "@uppy/react": "^2.1.0",
     "@uppy/thumbnail-generator": "^2.0.4",
     "@uppy/transloadit": "^2.0.3",
