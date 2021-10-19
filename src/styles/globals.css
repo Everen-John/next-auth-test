@@ -19,3 +19,15 @@ a {
 * {
 	box-sizing: border-box;
 }
+
+.react-datepicker-popper {
+	z-index: 9999 !important;
+}
+
+.react-datepicker {
+	z-index: 9999 !important;
+}
+
+.uppy-DashboardContent-bar {
+	z-index: 9900 !important;
+}
