@@ -54,10 +54,23 @@ export default function uploadFile() {
 	const router = useRouter()
 	const { classid, intakeid } = router.query
 
+	useEffect(() => {
+		uppy.use(Form, {
+			target: "form",
+			resultName: "uppyResult",
+			getMetaFromForm: true,
+			addResultToForm: true,
+			multipleResults: false,
+			submitOnSuccess: false,
+			triggerUploadOnSubmit: false,
+		})
+	}, [])
+
 	return (
 		<Layout session={session}>
 			<div className='text-white'>intakeid: {intakeid}</div>
 			<div className='text-white'>classid: {classid}</div>
+			<form></form>
 
 			<div>
 				<Dashboard
@@ -68,6 +81,7 @@ export default function uploadFile() {
 							browse: "browse",
 						},
 					}}
+					hideUploadButton={true}
 				/>
 			</div>
 		</Layout>
