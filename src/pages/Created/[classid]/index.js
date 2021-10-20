@@ -52,6 +52,19 @@ export default function classid() {
 			).then((res) => res.json())
 			console.log("intakeList", res)
 			setIntakesInClass(res)
+			if (
+				!intakeId &&
+				!localStorage.getItem(`classId${classid}lastPickedAccordianMenu`)
+			) {
+				setIntakeId(res[0].intake_oID)
+				localStorage.setItem(
+					`classId${classid}lastPickedAccordianMenu`,
+					JSON.stringify({
+						intake_oID: res[0].intake_oID,
+						intake_name: res[0].intake_name,
+					})
+				)
+			}
 			setLoading(false)
 		} else {
 			console.log("Not authenticated!")
@@ -77,6 +90,7 @@ export default function classid() {
 			}).then((res) => res.json())
 			setIntakeData(res)
 			setIntakeLoading(false)
+			console.log("res", res)
 		} else {
 			console.log("Intakeid not ready yet, or not authenticated!")
 			console.log("status", status)
@@ -97,14 +111,29 @@ export default function classid() {
 
 	useEffect(async () => {
 		if (!intakeId && classid) {
-			console.log("running if statement")
-			setIntakeId(
-				JSON.parse(
-					localStorage.getItem(`classId${classid}lastPickedAccordianMenu`)
-				).intake_oID
+			console.log("intakeid", intakeId)
+			console.log("classid", classid)
+			console.log(
+				"localstoragecheck",
+				localStorage.getItem(`classId${classid}lastPickedAccordianMenu`)
 			)
+			if (localStorage.getItem(`classId${classid}lastPickedAccordianMenu`)) {
+				try {
+					setIntakeId(
+						JSON.parse(
+							localStorage.getItem(`classId${classid}lastPickedAccordianMenu`)
+						).intake_oID
+					)
+				} catch (e) {
+					console.log(e)
+				}
+			} else {
+				console.log("Doing nothing!")
+			}
 		} else {
 			console.log("classid not ready yet, or intakeid is already set")
+			console.log("intakeid", intakeId)
+			console.log("classid", classid)
 		}
 	}, [intakeId, classid])
 

@@ -54,7 +54,15 @@ export default function ClassCreatedFABButton({ classid, intakeid }) {
 							<AcademicCapIcon className='max-h-10 w-6 mr-2 inline-block' />
 							<div className='inline-block'>Quiz</div>
 						</button>
-						<Link href={`/Created/${classid}/${intakeid}/uploadFile`}>
+						<Link
+							href={`/Created/${classid}/${intakeid}/uploadFile?intake_name=${encodeURIComponent(
+								JSON.parse(
+									localStorage.getItem(
+										`classId${classid}lastPickedAccordianMenu`
+									)
+								).intake_name
+							)}`}
+						>
 							<button
 								onClick={handleAddFile}
 								className='px-3 ml-auto mr-0 mb-1 list-item text-white w-auto h-10 bg-green-600 rounded-full hover:bg-green-700 active:shadow-lg mouse shadow focus:outline-none'

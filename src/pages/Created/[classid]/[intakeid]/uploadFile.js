@@ -1,6 +1,7 @@
 import { useRouter } from "next/router"
 import { useSession } from "next-auth/react"
 import { useState, useEffect } from "react"
+import Link from "next/link"
 
 import * as yup from "yup"
 import Uppy from "@uppy/core"
@@ -67,7 +68,7 @@ let fileUploadSchema = yup.object().shape({
 export default function uploadFile() {
 	const { data: session, status } = useSession()
 	const router = useRouter()
-	const { classid, intakeid } = router.query
+	const { classid, intakeid, intake_name } = router.query
 	const [formData, setFormData] = useState({
 		title: "",
 		description: "",
@@ -133,6 +134,15 @@ export default function uploadFile() {
 
 	return (
 		<Layout session={session}>
+			<div className='m-2 text-xs text-white'>
+				<Link href='/'>
+					<a className='text-green-400 mx-2'>Home</a>
+				</Link>
+				{" > "}
+				<Link href={`/Created/${classid}`}>
+					<a className='text-green-400 mx-2 '>{intake_name}</a>
+				</Link>
+			</div>
 			<div className='bg-green-700 m-2 '>
 				<form
 					onSubmit={(e) => {
