@@ -18,7 +18,7 @@ import { PlusIcon } from "@heroicons/react/solid"
 
 import FABButton from "../../../components/classid/classCreatedFABButton"
 
-export default function classid() {
+export default function Index() {
 	const { data: session, status } = useSession()
 	const router = useRouter()
 	const [intakesInClass, setIntakesInClass] = useState()
@@ -101,12 +101,15 @@ export default function classid() {
 		setIntakeId(intakeid)
 	}
 
-	useEffect(async () => {
-		if (status === "authenticated") {
-			getIntakeList()
-		} else {
-			console.log("Awaiting authentication!")
+	useEffect(() => {
+		async function fetchIntakeList() {
+			if (status === "authenticated") {
+				getIntakeList()
+			} else {
+				console.log("Awaiting authentication!")
+			}
 		}
+		fetchIntakeList()
 	}, [status])
 
 	useEffect(async () => {
@@ -171,7 +174,12 @@ export default function classid() {
 
 			{intakeLoading ? (
 				<div className='flex justify-center m-10'>
-					<Image src='/Loaders/tail-spin.svg' width={100} height={100} />
+					<Image
+						src='/Loaders/tail-spin.svg'
+						width={100}
+						height={100}
+						alt='spinner'
+					/>
 				</div>
 			) : (
 				<div>

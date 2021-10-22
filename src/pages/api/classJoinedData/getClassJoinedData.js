@@ -76,7 +76,7 @@ export default async function getHomePageData(req, res) {
 						},
 					},
 				],
-				Contents: [
+				contents: [
 					{
 						$project: {
 							content_oIDs: 1.0,
@@ -89,7 +89,7 @@ export default async function getHomePageData(req, res) {
 					},
 					{
 						$lookup: {
-							from: "Contents",
+							from: "contents",
 							localField: "content_oIDs",
 							foreignField: "_id",
 							as: "contentDatas",
@@ -180,7 +180,7 @@ export default async function getHomePageData(req, res) {
 			$project: {
 				GeneralData: 1.0,
 				Items: {
-					$concatArrays: ["$Quizes", "$Contents", "$Files", "$Announcements"],
+					$concatArrays: ["$Quizes", "$contents", "$Files", "$Announcements"],
 				},
 			},
 		},

@@ -65,8 +65,8 @@ export default function CalendarCell({
 								{/*body*/}
 								<div className='relative p-2 flex-auto'>
 									{announcementDatas ? (
-										announcementDatas.map((item) => (
-											<Link href={"/Joined/" + item.intake_id}>
+										announcementDatas.map((item, key) => (
+											<Link href={"/Joined/" + item.intake_id} key={key}>
 												<div
 													className={
 														" rounded-md my-4 text-blueGray-500 text-lg leading-relaxed p-2 " +

@@ -15,7 +15,7 @@ export const config = {
 	},
 }
 
-export default async (req, res) => {
+export default uploadFile = async (req, res) => {
 	let intake_oID = "6140115086beabb9ec5be370"
 	const form = new formidable.IncomingForm()
 	form.uploadDir = "./public/uploads/"

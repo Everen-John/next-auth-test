@@ -21,20 +21,25 @@ let fileUploadSchema = yup.object().shape({
 })
 
 let quillModules = {
-	// magicUrl: true,
-	// imageCompress: {
-	// 	quality: 0.6, // default
-	// 	maxWidth: 1000, // default
-	// 	maxHeight: 1000, // default
-	// 	imageType: "image/jpeg", // default
-	// 	debug: true, // default
-	// 	suppressErrorLogging: false, // default
-	// },
-	// blotFormatter: {
-	// 	// see config options below
-	// },
+	markdownShortcuts: {
+		debug: false,
+	},
+	magicUrl: true,
+	imageCompress: {
+		quality: 0.6, // default
+		maxWidth: 1000, // default
+		maxHeight: 1000, // default
+		imageType: "image/jpeg", // default
+		debug: false, // default
+		suppressErrorLogging: false, // default
+	},
+	blotFormatter: {
+		// see config options below
+		debug: false,
+	},
 	toolbar: [
-		[{ header: [1, 2, 3, 4, false] }],
+		[{ header: [1, 2, 3, 4, 5, 6, false] }],
+		[{ color: [] }, { background: [] }],
 		["bold", "italic", "underline", "strike", "blockquote", "code"],
 		[
 			{ list: "ordered" },
@@ -59,6 +64,8 @@ let quillFormats = [
 	"italic",
 	"underline",
 	"strike",
+	"color",
+	"background",
 	"blockquote",
 	"code",
 	"list",
@@ -70,7 +77,7 @@ let quillFormats = [
 	"video",
 ]
 
-export default function createDocument() {
+export default function CreateDocument() {
 	const { data: session, status } = useSession()
 	const router = useRouter()
 	const { classid, intakeid, intake_name } = router.query
@@ -86,6 +93,31 @@ export default function createDocument() {
 	})
 	const [editorData, setEditorData] = useState("")
 
+	const uploadContent = async () => {
+		console.log("Ran uploadDocument")
+		try {
+			let res = await fetch("/api/classCreatedData/uploadContent", {
+				method: "POST", // *GET, POST, PUT, DELETE, etc.
+				mode: "cors", // no-cors, *cors, same-origin
+				cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
+				credentials: "same-origin", // include, *same-origin, omit
+				headers: {
+					"Content-Type": "application/json",
+				},
+				redirect: "follow", // manual, *follow, error
+				referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+				body: JSON.stringify({
+					contentData: formData,
+					user: session.user.id,
+				}), // body data type must match "Content-Type" header
+			})
+				.then((res) => res.json())
+				.catch((e) => console.log(e))
+		} catch (e) {
+			console.log(e)
+		}
+	}
+
 	const loadQuill = async () => {
 		return new Promise(async (resolve, reject) => {
 			const Quill = await require("react-quill").Quill
@@ -93,22 +125,38 @@ export default function createDocument() {
 				.default
 			const magicUrl = (await import("quill-magic-url")).default
 			const ImageCompress = (await import("quill-image-compress")).default
-			resolve({ Quill, BlotFormatter, magicUrl, ImageCompress })
-		})
-			.then(({ Quill, BlotFormatter, magicUrl, ImageCompress }) => {
-				console.log(Quill)
-				Quill.register("modules/blotFormatter", BlotFormatter)
-				Quill.register("modules/magicUrl", magicUrl)
-				Quill.register("modules/imageCompress", ImageCompress)
-				return
+			const MarkdownShortcuts = (await import("quill-markdown-shortcuts"))
+				.default
+			resolve({
+				Quill,
+				BlotFormatter,
+				magicUrl,
+				ImageCompress,
+				MarkdownShortcuts,
 			})
+		})
+			.then(
+				({
+					Quill,
+					BlotFormatter,
+					magicUrl,
+					ImageCompress,
+					MarkdownShortcuts,
+				}) => {
+					Quill.register("modules/blotFormatter", BlotFormatter)
+					Quill.register("modules/magicUrl", magicUrl)
+					Quill.register("modules/imageCompress", ImageCompress)
+					Quill.register("modules/markdownShortcuts", MarkdownShortcuts)
+					return
+				}
+			)
 			.then((value) => {
 				setEnableEditor(true)
 			})
 	}
 
-	useEffect(async () => {
-		await loadQuill()
+	useEffect(() => {
+		loadQuill()
 	}, [])
 
 	useEffect(() => {
@@ -160,6 +208,7 @@ export default function createDocument() {
 				<form
 					onSubmit={(e) => {
 						e.preventDefault()
+						uploadContent()
 					}}
 				>
 					<input

@@ -3,10 +3,10 @@ import { useSession } from "next-auth/react"
 import { useState, useEffect } from "react"
 import Image from "next/image"
 
-import Layout from "../../components/master/layout"
-import ClassJoinedContentBlock from "../../components/intakeid/classJoinedContentBlock"
+import Layout from "../../../components/master/layout"
+import ClassJoinedContentBlock from "../../../components/intakeid/classJoinedContentBlock"
 
-export default function intakeid() {
+export default function Intakeid() {
 	const { data: session, status } = useSession()
 	const router = useRouter()
 	const [intakeJoined, setIntakeJoined] = useState()
@@ -32,6 +32,7 @@ export default function intakeid() {
 				}), // body data type must match "Content-Type" header
 			}).then((res) => res.json())
 			setIntakeJoined(res)
+			localStorage.setItem(`${res._id._id}name`, res._id.intake_name)
 			setLoading(false)
 		}
 	}

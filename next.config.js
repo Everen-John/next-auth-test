@@ -5,7 +5,7 @@ module.exports = {
 		return config
 	},
 	images: {
-		domains: ["via.placeholder.com", "https://lh3.googleusercontent.com"],
+		domains: ["via.placeholder.com", "lh3.googleusercontent.com"],
 	},
 	// async rewrites() {
 	// 	return [

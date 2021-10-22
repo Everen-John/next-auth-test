@@ -65,7 +65,7 @@ let fileUploadSchema = yup.object().shape({
 	files: yup.array().min(1).required(),
 })
 
-export default function uploadFile() {
+export default function UploadFile() {
 	const { data: session, status } = useSession()
 	const router = useRouter()
 	const { classid, intakeid, intake_name } = router.query

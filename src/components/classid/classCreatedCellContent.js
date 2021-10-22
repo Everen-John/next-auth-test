@@ -36,12 +36,12 @@ export default function ClassCreatedCellContent({ weekItem }) {
 							"text-xs font-medium rounded-md " + weekItem.contentDatas.bgcolor
 						}
 					>
-						{weekItem.contentDatas.content_title}
+						{weekItem.contentDatas.title}
 					</div>
 					<div className='text-2xs'>
 						{/* Deadline: {deadlineDate} {deadlineTime} */}
 					</div>
-					<p className='text-xs'>{weekItem.contentDatas.content_markup} </p>
+					<p className='text-xs'>{weekItem.contentDatas.description} </p>
 				</div>
 			</div>
 		</div>

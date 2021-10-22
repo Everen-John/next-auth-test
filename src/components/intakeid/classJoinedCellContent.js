@@ -20,30 +20,38 @@ export default function ClassJoinedCellContent({ weekItem }) {
 		minute: "2-digit",
 	})
 	return (
-		<div className='bg-gray-200 p-2 m-2 rounded-md'>
-			<div className='text-3xs'>
-				published on: {publishDate} {publishTime}
-			</div>
-			<div className='flex flex-row'>
-				<div className='p-1 w-28 min-w-1/8 max-w-1/8'>
-					{/* <Image src='/053-file.svg' width={28} height={28} /> */}
-					<AnnotationIcon className='h-7 w-7' />
+		<Link
+			href={`./${weekItem.contentDatas.in_intake_oID}/content/${
+				weekItem.contentDatas._id
+			}?intake_name=${localStorage.getItem(
+				`${weekItem.contentDatas.in_intake_oID}name`
+			)}`}
+		>
+			<div className='bg-gray-200 p-2 m-2 rounded-md'>
+				<div className='text-3xs'>
+					published on: {publishDate} {publishTime}
 				</div>
+				<div className='flex flex-row'>
+					<div className='p-1 w-28 min-w-1/8 max-w-1/8'>
+						<AnnotationIcon className='h-7 w-7' />
+					</div>
 
-				<div className='p-1 break-words min-w-7/8 '>
-					<div
-						className={
-							"text-xs font-medium rounded-md " + weekItem.contentDatas.bgcolor
-						}
-					>
-						{weekItem.contentDatas.content_title}
+					<div className='p-1 break-words min-w-7/8 '>
+						<div
+							className={
+								"text-xs font-medium rounded-md " +
+								weekItem.contentDatas.bgcolor
+							}
+						>
+							{weekItem.contentDatas.title}
+						</div>
+						<div className='text-2xs'>
+							{/* Deadline: {deadlineDate} {deadlineTime} */}
+						</div>
+						<p className='text-xs'>{weekItem.contentDatas.description} </p>
 					</div>
-					<div className='text-2xs'>
-						{/* Deadline: {deadlineDate} {deadlineTime} */}
-					</div>
-					<p className='text-xs'>{weekItem.contentDatas.content_markup} </p>
 				</div>
 			</div>
-		</div>
+		</Link>
 	)
 }
