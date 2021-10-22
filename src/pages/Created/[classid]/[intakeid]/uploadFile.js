@@ -171,7 +171,7 @@ export default function uploadFile() {
 							required={true}
 							placeholder='Give the upload a description...'
 							name='description'
-							maxLength={50}
+							maxLength={200}
 							onChange={(e) => {
 								setFormData({
 									...formData,
@@ -220,6 +220,7 @@ export default function uploadFile() {
 							width={300}
 							hideUploadButton={true}
 							hideCancelButton={true}
+							hideProgressAfterFinish={true}
 						/>
 
 						<button

@@ -2,6 +2,11 @@
 @import "react-datepicker/dist/react-datepicker.css";
 @import "@uppy/core/dist/style.css";
 @import "@uppy/file-input/dist/style.css";
+@import "@uppy/core/dist/style.css";
+@import "@uppy/drag-drop/dist/style.css";
+@import "@uppy/core/dist/style.css";
+@import "@uppy/dashboard/dist/style.css";
+@import "react-quill/dist/quill.snow.css";
 html,
 body {
 	padding: 0;

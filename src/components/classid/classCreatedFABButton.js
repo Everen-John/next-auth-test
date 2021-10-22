@@ -71,13 +71,23 @@ export default function ClassCreatedFABButton({ classid, intakeid }) {
 								<div className='inline-block'>File</div>
 							</button>
 						</Link>
-						<button
-							onClick={handleAddContent}
-							className='px-3 ml-auto mr-0 mb-1 list-item text-white w-auto h-10 bg-green-600 rounded-full hover:bg-green-700 active:shadow-lg mouse shadow  focus:outline-none'
+						<Link
+							href={`/Created/${classid}/${intakeid}/createDocument?intake_name=${encodeURIComponent(
+								JSON.parse(
+									localStorage.getItem(
+										`classId${classid}lastPickedAccordianMenu`
+									)
+								).intake_name
+							)}`}
 						>
-							<AnnotationIcon className='max-h-10 w-6 mr-2 inline-block' />
-							<div className='inline-block'>Content</div>
-						</button>
+							<button
+								onClick={handleAddContent}
+								className='px-3 ml-auto mr-0 mb-1 list-item text-white w-auto h-10 bg-green-600 rounded-full hover:bg-green-700 active:shadow-lg mouse shadow  focus:outline-none'
+							>
+								<AnnotationIcon className='max-h-10 w-6 mr-2 inline-block' />
+								<div className='inline-block'>Content</div>
+							</button>
+						</Link>
 						<button
 							onClick={handleAddAnnouncement}
 							className='px-3 ml-auto mr-0 mb-1 list-item text-white w-auto h-10 bg-green-600 rounded-full hover:bg-green-700 active:shadow-lg mouse shadow focus:outline-none'

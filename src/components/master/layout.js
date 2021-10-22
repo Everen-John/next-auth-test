@@ -4,7 +4,6 @@ import Image from "next/image"
 import Link from "next/link"
 import Header from "./header"
 import Footer from "./footer"
-
 export default function Layout({ children, session }) {
 	return (
 		<div className='bg-gray-900'>
