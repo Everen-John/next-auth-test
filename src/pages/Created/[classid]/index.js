@@ -183,7 +183,10 @@ export default function Index() {
 				</div>
 			) : (
 				<div>
-					<ClassCreatedContentBlock intakeCreated={intakeData} />
+					<ClassCreatedContentBlock
+						intakeCreated={intakeData}
+						classid={classid}
+					/>
 				</div>
 			)}
 		</Layout>

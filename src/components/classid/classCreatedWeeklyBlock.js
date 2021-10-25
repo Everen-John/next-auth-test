@@ -7,7 +7,11 @@ import ClassCreatedCellContent from "./classCreatedCellContent"
 import ClassCreatedCellFiles from "./classCreatedCellFiles"
 import ClassCreatedCellQuiz from "./classCreatedCellQuiz"
 
-export default function ClassCreatedWeeklyBlock({ yearedData, setFolded }) {
+export default function ClassCreatedWeeklyBlock({
+	yearedData,
+	setFolded,
+	classid,
+}) {
 	let firstDayOfWeek = new Date(yearedData.firstDayOfWeek).toLocaleDateString(
 		"en-GB"
 	)
@@ -23,15 +27,37 @@ export default function ClassCreatedWeeklyBlock({ yearedData, setFolded }) {
 				<div className='pl-2 text-3xs'>Week {yearedData.weekNumber}</div>
 				{yearedData.weekItems.map((weekItem, key) => {
 					if (weekItem.type === "content")
-						return <ClassCreatedCellContent weekItem={weekItem} key={key} />
+						return (
+							<ClassCreatedCellContent
+								weekItem={weekItem}
+								key={key}
+								classid={classid}
+							/>
+						)
 					else if (weekItem.type === "announcement")
 						return (
-							<ClassCreatedCellAnnouncement weekItem={weekItem} key={key} />
+							<ClassCreatedCellAnnouncement
+								weekItem={weekItem}
+								key={key}
+								classid={classid}
+							/>
 						)
 					else if (weekItem.type === "quiz")
-						return <ClassCreatedCellQuiz weekItem={weekItem} key={key} />
+						return (
+							<ClassCreatedCellQuiz
+								weekItem={weekItem}
+								key={key}
+								classid={classid}
+							/>
+						)
 					else if (weekItem.type === "files")
-						return <ClassCreatedCellFiles weekItem={weekItem} key={key} />
+						return (
+							<ClassCreatedCellFiles
+								weekItem={weekItem}
+								key={key}
+								classid={classid}
+							/>
+						)
 				})}
 			</div>
 		</div>

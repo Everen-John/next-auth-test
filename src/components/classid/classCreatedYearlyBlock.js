@@ -8,7 +8,7 @@ import { useState } from "react"
 
 import ClassCreatedWeeklyBlock from "./classCreatedWeeklyBlock"
 
-export default function ClassCreatedYearlyBlock({ yearlyItem }) {
+export default function ClassCreatedYearlyBlock({ yearlyItem, classid }) {
 	let today = new Date()
 	let itemYearBeginning = new Date(yearlyItem.year, 0, 1)
 	let itemYearEnding = new Date(yearlyItem.year, 11, 1)
@@ -38,7 +38,13 @@ export default function ClassCreatedYearlyBlock({ yearlyItem }) {
 			{folded
 				? null
 				: yearlyItem.yearedData.map((yearedData, key) => {
-						return <ClassCreatedWeeklyBlock yearedData={yearedData} key={key} />
+						return (
+							<ClassCreatedWeeklyBlock
+								yearedData={yearedData}
+								key={key}
+								classid={classid}
+							/>
+						)
 				  })}
 			{}
 		</div>
