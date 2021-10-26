@@ -13,7 +13,14 @@ import {
 } from "@heroicons/react/outline"
 import { XyzTransitionGroup } from "@animxyz/react"
 
-export default function ClassCreatedFABButton({ classid, intakeid }) {
+export default function ClassCreatedFABButton({
+	classid,
+	intakeid,
+	addNewFITBQuestion,
+	addNewCheckboxQuestion,
+	addNewRadioQuestion,
+	addNewEssayQuestion,
+}) {
 	const [btnAddActive, setbtnAddActive] = useState(false)
 
 	const handleAddQuiz = () => {
@@ -48,14 +55,20 @@ export default function ClassCreatedFABButton({ classid, intakeid }) {
 						}}
 					>
 						<button
-							onClick={handleAddQuiz}
+							onClick={() => {
+								setbtnAddActive(false)
+								addNewFITBQuestion()
+							}}
 							className='px-3 ml-auto mr-0 mb-1 list-item text-white w-auto h-10 bg-green-600 rounded-full hover:bg-green-700 active:shadow-lg mouse shadow focus:outline-none'
 						>
 							<div className='inline-block'>Fill in the Blanks - Objective</div>
 						</button>
 
 						<button
-							onClick={handleAddQuiz}
+							onClick={() => {
+								setbtnAddActive(false)
+								addNewRadioQuestion()
+							}}
 							className='px-3 ml-auto mr-0 mb-1 list-item text-white w-auto h-10 bg-green-600 rounded-full hover:bg-green-700 active:shadow-lg mouse shadow focus:outline-none'
 						>
 							<div className='inline-block'>
@@ -63,7 +76,10 @@ export default function ClassCreatedFABButton({ classid, intakeid }) {
 							</div>
 						</button>
 						<button
-							onClick={handleAddQuiz}
+							onClick={() => {
+								setbtnAddActive(false)
+								addNewCheckboxQuestion()
+							}}
 							className='px-3 ml-auto mr-0 mb-1 list-item text-white w-auto h-10 bg-green-600 rounded-full hover:bg-green-700 active:shadow-lg mouse shadow focus:outline-none'
 						>
 							<div className='inline-block'>
@@ -71,7 +87,10 @@ export default function ClassCreatedFABButton({ classid, intakeid }) {
 							</div>
 						</button>
 						<button
-							onClick={handleAddQuiz}
+							onClick={() => {
+								setbtnAddActive(false)
+								addNewEssayQuestion()
+							}}
 							className='px-3 ml-auto mr-0 mb-1 list-item text-white w-auto h-10 bg-green-600 rounded-full hover:bg-green-700 active:shadow-lg mouse shadow focus:outline-none'
 						>
 							<div className='inline-block'>Essay - Subjective</div>

@@ -1,16 +1,15 @@
 import dynamic from "next/dynamic"
-import React from "react"
+import React, { useState, useEffect } from "react"
 import Layout from "../../../../components/master/layout"
 import Link from "next/link"
 import { useSession } from "next-auth/react"
 import { useRouter } from "next/router"
 import { PlusCircleIcon } from "@heroicons/react/outline"
 import FABButton from "../../../../components/classid/createQuiz/createQuizFABButton"
+import FITBQuizType from "../../../../components/classid/createQuiz/FITBQuizType"
 
 let quillModules = {
-	markdownShortcuts: {
-		debug: false,
-	},
+	markdownShortcuts: false,
 	magicUrl: true,
 	imageCompress: {
 		quality: 0.5, // default
@@ -25,7 +24,7 @@ let quillModules = {
 		debug: false,
 	},
 	toolbar: [
-		[{ header: [1, 2, 3, 4, 5, 6, false] }],
+		[{ header: [1, 2, 3, 4, false] }],
 		[{ color: [] }, { background: [] }],
 		["bold", "italic", "underline", "strike", "blockquote", "code"],
 		[
@@ -70,6 +69,8 @@ export default function QuizComponent() {
 	const { data: session, status } = useSession()
 	const router = useRouter()
 	const { classid, intakeid, intake_name } = router.query
+	const [formLoading, setFormLoading] = useState(true)
+	const [quizData, setQuizData] = useState([])
 
 	const loadQuill = async () => {
 		return new Promise(async (resolve, reject) => {
@@ -104,25 +105,102 @@ export default function QuizComponent() {
 				}
 			)
 			.then((value) => {
-				setEnableEditor(true)
+				setFormLoading(false)
 			})
 	}
 
+	const addNewFITBQuestion = () => {
+		setQuizData([
+			...quizData,
+			{ question_text: "", question_type: "FITB", fitb_answers: [""] },
+		])
+	}
+
+	const addNewCheckboxQuestion = () => {
+		setQuizData([
+			...quizData,
+			{
+				question_text: "",
+				question_type: "checkbox",
+				checkbox_values: [""],
+				checkbox_answers: [],
+			},
+		])
+	}
+
+	const addNewRadioQuestion = () => {
+		setQuizData([
+			...quizData,
+			{
+				question_text: "",
+				question_type: "radio",
+				checkbox_values: [""],
+				checkbox_answers: [],
+			},
+		])
+	}
+
+	const addNewEssayQuestion = () => {
+		setQuizData([...quizData, { question_text: "", question_type: "essay" }])
+	}
+
+	const quizDataChangeHandler = (quizDataChild, quizDataChildIndex) => {
+		let tempQuizData = JSON.parse(JSON.stringify(quizData))
+		tempQuizData[quizDataChildIndex] = quizDataChild
+		setQuizData(tempQuizData)
+	}
+
+	useEffect(() => {
+		loadQuill()
+	}, [])
+
+	useEffect(() => {
+		console.log(quizData)
+	}, [quizData])
+
 	return (
 		<Layout session={session}>
-			<div className='m-2 text-xs text-white'>
-				<Link href='/'>
-					<a className='text-green-400 mx-2'>Home</a>
-				</Link>
-				{" > "}
-				<Link href={`/Created/${classid}`}>
-					<a className='text-green-400 mx-2 '>{intake_name}</a>
-				</Link>
+			<div>
+				<div className='m-2 text-xs text-white'>
+					<Link href='/'>
+						<a className='text-green-400 mx-2'>Home</a>
+					</Link>
+					{" > "}
+					<Link href={`/Created/${classid}`}>
+						<a className='text-green-400 mx-2 '>{intake_name}</a>
+					</Link>
+				</div>
+				<div className='bg-gray-800 p-1 pl-3 m-2 rounded-md text-green-500 text-xl'>
+					Create New Quiz
+				</div>
+				{formLoading
+					? null
+					: quizData.map((item, key) => {
+							switch (item.question_type) {
+								case "FITB":
+									return (
+										<FITBQuizType
+											quillModules={quillModules}
+											quillFormats={quillFormats}
+											FITBData={item}
+											index={key}
+											quizDataChangeHandler={quizDataChangeHandler}
+											key={key}
+										/>
+									)
+								case "radio":
+								case "checkBox":
+								case "essay":
+									break
+							}
+					  })}
+				<FABButton
+					addNewCheckboxQuestion={addNewCheckboxQuestion}
+					addNewFITBQuestion={addNewFITBQuestion}
+					addNewRadioQuestion={addNewRadioQuestion}
+					addNewEssayQuestion={addNewEssayQuestion}
+				/>
 			</div>
-			<div className='bg-green-300 mx-1'>
-				<div className='bg-red-300'>Create Quiz</div>
-			</div>
-			<FABButton />
 		</Layout>
 	)
 }

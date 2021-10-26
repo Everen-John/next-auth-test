@@ -9,7 +9,6 @@ import Layout from "../../../../components/master/layout"
 import DatePicker from "react-datepicker"
 
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false })
-// const Quill = dynamic(() => import("react-quill/dist/react-quill"), { ssr: false })
 
 let fileUploadSchema = yup.object().shape({
 	title: yup.string().max(40, "max title reached!").required(),

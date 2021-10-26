@@ -6,10 +6,10 @@ import Header from "./header"
 import Footer from "./footer"
 export default function Layout({ children, session }) {
 	return (
-		<div>
-			<div className='bg-gray-900 min-h-screen'>
+		<div className='h-screen'>
+			<div className='bg-gray-900 min-h-full'>
 				<Header session={session} />
-				<main className=''>{children}</main>
+				<main className='overflow-visible'>{children}</main>
 			</div>
 			<Footer />
 		</div>
