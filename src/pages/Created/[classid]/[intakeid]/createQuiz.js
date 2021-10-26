@@ -7,6 +7,7 @@ import { useRouter } from "next/router"
 import { PlusCircleIcon } from "@heroicons/react/outline"
 import FABButton from "../../../../components/classid/createQuiz/createQuizFABButton"
 import FITBQuizType from "../../../../components/classid/createQuiz/FITBQuizType"
+// import RadioQuizType from "../../../../components/classid/createQuiz/RadioQuizType"
 
 let quillModules = {
 	markdownShortcuts: false,
@@ -189,6 +190,16 @@ export default function QuizComponent() {
 										/>
 									)
 								case "radio":
+									return (
+										<RadioQuizType
+											quillModules={quillModules}
+											quillFormats={quillFormats}
+											RadioData={item}
+											index={key}
+											quizDataChangeHandler={quizDataChangeHandler}
+											key={key}
+										/>
+									)
 								case "checkBox":
 								case "essay":
 									break
