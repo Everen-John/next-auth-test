@@ -57,7 +57,7 @@ export default function FITBQuizType({
 					{FITBData.fitb_answers.map((item, key) => {
 						console.log(item)
 						return (
-							<div className=''>
+							<div className='' key={key}>
 								<input
 									type='text'
 									value={item}

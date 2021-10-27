@@ -10,7 +10,9 @@ export default function ClassesJoinedBlock({
 }) {
 	return (
 		<div className='bg-green-600 mb-2'>
-			<h2 className='text-base pt-2 pl-2 text-white'>Classes You've Joined</h2>
+			<h2 className='text-base pt-2 pl-2 text-white'>
+				Classes You{"'"}ve Joined
+			</h2>
 			<div className='overflow-x-auto whitespace-nowrap'>
 				<div className='bg-white border border-solid rounded-md h-44 w-36 inline-block m-2 shadow-xl'>
 					<div className='truncate text-xs pl-2 font-bold text-center'>

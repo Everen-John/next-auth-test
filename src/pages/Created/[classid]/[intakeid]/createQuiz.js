@@ -190,16 +190,7 @@ export default function QuizComponent() {
 										/>
 									)
 								case "radio":
-									return (
-										<RadioQuizType
-											quillModules={quillModules}
-											quillFormats={quillFormats}
-											RadioData={item}
-											index={key}
-											quizDataChangeHandler={quizDataChangeHandler}
-											key={key}
-										/>
-									)
+
 								case "checkBox":
 								case "essay":
 									break
