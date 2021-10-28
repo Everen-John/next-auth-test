@@ -203,7 +203,7 @@ export default function CreateDocument() {
 					<a className='text-green-400 mx-2 '>{intake_name}</a>
 				</Link>
 			</div>
-			<div className='bg-green-700 m-2 '>
+			<div className='bg-green-700 m-2'>
 				<form
 					onSubmit={(e) => {
 						e.preventDefault()
