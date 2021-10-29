@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react"
 import dynamic from "next/dynamic"
-import { PlusCircleIcon, TrashIcon } from "@heroicons/react/outline"
+import { PlusCircleIcon, TrashIcon, XIcon } from "@heroicons/react/outline"
 
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false })
 export default function EssayQuizType({
@@ -9,6 +9,7 @@ export default function EssayQuizType({
 	essayData,
 	index,
 	quizDataChangeHandler,
+	removeQuestion,
 }) {
 	// const radioValuesHandler = (key, value) => {
 	// 	let tempRadioValues = essayData.radio_values
@@ -41,12 +42,20 @@ export default function EssayQuizType({
 
 	return (
 		<div className='bg-gray-200  mb-3 overflow-visible p-3'>
-			<div className='mb-6 text-xl font-medium'>
+			<div className='flex justify-between'>
 				<div className='text-sm text-gray-400 border border-gray-400 rounded-full h-5 w-5 flex items-center justify-center mr-2 p-1'>
 					{index + 1}
 				</div>
-				Essay
+				<div>
+					<XIcon
+						className='h-5 w-5'
+						onClick={(e) => {
+							removeQuestion(index)
+						}}
+					/>
+				</div>
 			</div>
+			<div className='mb-6 text-xl font-medium'>Essay</div>
 			<div className='mb-6'>
 				<p className='text-sm'>Question Text</p>
 				<ReactQuill

@@ -4,7 +4,7 @@ import Layout from "../../../../components/master/layout"
 import Link from "next/link"
 import { useSession } from "next-auth/react"
 import { useRouter } from "next/router"
-import { PlusCircleIcon } from "@heroicons/react/outline"
+import { PlusCircleIcon, PlusIcon } from "@heroicons/react/outline"
 import FABButton from "../../../../components/classid/createQuiz/createQuizFABButton"
 import FITBQuizType from "../../../../components/classid/createQuiz/FITBQuizType"
 import RadioQuizType from "../../../../components/classid/createQuiz/radioQuizType"
@@ -12,7 +12,42 @@ import CheckboxQuizType from "../../../../components/classid/createQuiz/checkbox
 import EssayQuizType from "../../../../components/classid/createQuiz/essayQuizType"
 import DatePicker from "react-datepicker"
 import { data } from "autoprefixer"
+import * as yup from "yup"
 // import RadioQuizType from "../../../../components/classid/createQuiz/RadioQuizType"
+
+let quizFormUploadSchema = yup.object().shape({
+	title: yup.string().max(40, "max title reached!").required(),
+	description: yup.string().max(100, "Reached Maximum Length!").required(),
+	publish_time: yup.date().required(),
+	deadline: yup.date().required(),
+	in_intake_oID: yup.string().required(),
+	questions: yup.array().min(1).required(),
+})
+
+let FITBSchema = yup.object().shape({
+	fitb_answers: yup.array().min(1).required(),
+	question_text: yup.string().max(2000000, "Max keywords reached!").required(),
+	question_type: yup.string().required(),
+})
+
+let radioSchema = yup.object().shape({
+	radio_answer: yup.number().required(),
+	radio_values: yup.array().min(2).required(),
+	question_text: yup.string().max(2000000, "Max keywords reached!").required(),
+	question_type: yup.string().required(),
+})
+
+let checkboxSchema = yup.object().shape({
+	checkbox_answers: yup.array().min(1).required(),
+	checkbox_values: yup.array().min(2).required(),
+	question_text: yup.string().max(2000000, "Max keywords reached!").required(),
+	question_type: yup.string().required(),
+})
+
+let essaySchema = yup.object().shape({
+	question_text: yup.string().max(2000000, "Max keywords reached!").required(),
+	question_type: yup.string().required(),
+})
 
 let quillModules = {
 	markdownShortcuts: false,
@@ -130,13 +165,21 @@ export default function QuizComponent() {
 		])
 	}
 
+	const removeQuestion = (key) => {
+		let tempQuizData = quizData
+		console.log("RemoveQuestion: ", tempQuizData)
+		tempQuizData.splice(key, 1)
+		console.log("Spliced:", tempQuizData)
+		setQuizData([...tempQuizData])
+	}
+
 	const addNewCheckboxQuestion = () => {
 		setQuizData([
 			...quizData,
 			{
 				question_text: "",
 				question_type: "checkbox",
-				checkbox_values: [""],
+				checkbox_values: ["", ""],
 				checkbox_answers: [],
 			},
 		])
@@ -148,7 +191,7 @@ export default function QuizComponent() {
 			{
 				question_text: "",
 				question_type: "radio",
-				radio_values: [""],
+				radio_values: ["", ""],
 				radio_answer: null,
 			},
 		])
@@ -180,6 +223,7 @@ export default function QuizComponent() {
 	}, [intakeid])
 
 	useEffect(() => {
+		console.log(quizData)
 		setFormData({
 			...formData,
 			questions: quizData,
@@ -260,8 +304,10 @@ export default function QuizComponent() {
 						/>
 					</div>
 					{!formLoading && quizData.length === 0 ? (
-						<h1 className='text-base text-white '>
-							Click the bottom right Floating Action Button to Add a New Quiz!
+						<h1 className='text-2xs text-white text-center '>
+							Click the bottom right {"  "}
+							<PlusIcon className='w-7 h-7 p-2 inline-block bg-green-600 text-green-100 rounded-full hover:bg-green-700 ' />{" "}
+							to add a new quiz!
 						</h1>
 					) : (
 						<h1 className='text-xl text-white '>Questions</h1>
@@ -279,6 +325,7 @@ export default function QuizComponent() {
 												index={key}
 												quizDataChangeHandler={quizDataChangeHandler}
 												key={key}
+												removeQuestion={removeQuestion}
 											/>
 										)
 									case "radio":
@@ -290,6 +337,7 @@ export default function QuizComponent() {
 												index={key}
 												quizDataChangeHandler={quizDataChangeHandler}
 												key={key}
+												removeQuestion={removeQuestion}
 											/>
 										)
 									case "checkbox":
@@ -301,6 +349,7 @@ export default function QuizComponent() {
 												index={key}
 												quizDataChangeHandler={quizDataChangeHandler}
 												key={key}
+												removeQuestion={removeQuestion}
 											/>
 										)
 									case "essay":
@@ -312,6 +361,7 @@ export default function QuizComponent() {
 												index={key}
 												quizDataChangeHandler={quizDataChangeHandler}
 												key={key}
+												removeQuestion={removeQuestion}
 											/>
 										)
 								}
