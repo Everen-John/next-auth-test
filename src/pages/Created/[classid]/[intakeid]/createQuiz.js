@@ -106,7 +106,7 @@ let quillFormats = [
 
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false })
 
-export default function QuizComponent() {
+export default function CreateQuiz() {
 	const { data: session, status } = useSession()
 	const router = useRouter()
 	const { classid, intakeid, intake_name } = router.query
@@ -120,6 +120,35 @@ export default function QuizComponent() {
 		questions: {},
 	})
 	const [quizData, setQuizData] = useState([])
+
+	const uploadQuiz = async () => {
+		console.log("Ran uploadQuiz")
+		try {
+			let res = await fetch("/api/classCreatedData/createQuiz", {
+				method: "POST", // *GET, POST, PUT, DELETE, etc.
+				mode: "cors", // no-cors, *cors, same-origin
+				cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
+				credentials: "same-origin", // include, *same-origin, omit
+				headers: {
+					"Content-Type": "application/json",
+				},
+				redirect: "follow", // manual, *follow, error
+				referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+				body: JSON.stringify({
+					formData: formData,
+					user: session.user.id,
+				}), // body data type must match "Content-Type" header
+			})
+				.then((res) => res.json())
+				.catch((e) => console.log(e))
+			if (res.msg === "ok") {
+				window.alert("Updated Successfully!")
+				router.push(`../../${classid}`)
+			}
+		} catch (e) {
+			console.log(e)
+		}
+	}
 
 	const loadQuill = async () => {
 		return new Promise(async (resolve, reject) => {
@@ -215,20 +244,19 @@ export default function QuizComponent() {
 		console.log(formData)
 	}, [formData])
 
-	useEffect(() => {
+	useEffect(async () => {
+		console.log("router query", router.query)
 		setFormData({
 			...formData,
-			in_intake_oID: intakeid,
+			in_intake_oID: await router.query.intakeid,
 		})
-	}, [intakeid])
+	}, [router.query])
 
 	useEffect(() => {
-		console.log(quizData)
 		setFormData({
 			...formData,
 			questions: quizData,
 		})
-		console.log(formData)
 	}, [quizData])
 
 	return (
@@ -277,9 +305,10 @@ export default function QuizComponent() {
 							rows={4}
 						/>
 
-						<div className=' mb-1 h-10 w-full text-xs z-9999'>
+						<div className=' mb-1 h-14 w-full text-xs text-white z-9999'>
+							<div>Publish time</div>
 							<DatePicker
-								className='border rounded-md p-1 pl-2 w-full'
+								className='border rounded-md p-1 pl-2 w-full text-black'
 								name='publish_time'
 								selected={formData.publish_time}
 								dateFormat='dd/MM/yyyy'
@@ -287,6 +316,21 @@ export default function QuizComponent() {
 									setFormData({
 										...formData,
 										publish_time: new Date(date),
+									})
+								}
+							/>
+						</div>
+						<div className=' mb-1 h-14 w-full text-xs text-white z-9999'>
+							<div>Deadline</div>
+							<DatePicker
+								className='border rounded-md p-1 pl-2 w-full text-black'
+								name='deadline'
+								selected={formData.deadline}
+								dateFormat='dd/MM/yyyy'
+								onChange={(date) =>
+									setFormData({
+										...formData,
+										deadline: new Date(date),
 									})
 								}
 							/>
@@ -366,6 +410,18 @@ export default function QuizComponent() {
 										)
 								}
 						  })}
+					<button
+						type='submit'
+						disabled={quizData.length > 0 ? false : true}
+						className={`${
+							quizData.length > 0
+								? "bg-green-600 text-white font-bold transition-opacity shadow-lg border border-green-900 "
+								: "bg-green-900 bg-opacity-50 text-opacity-50 text-gray-50 scale-50"
+						} mt-4 mb-1 h-8 w-16 text-xs rounded-lg p-1`}
+						onClick={uploadQuiz}
+					>
+						Submit
+					</button>
 					<FABButton
 						addNewCheckboxQuestion={addNewCheckboxQuestion}
 						addNewFITBQuestion={addNewFITBQuestion}

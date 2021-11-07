@@ -190,6 +190,11 @@ export default async function getHomePageData(req, res) {
 			},
 		},
 		{
+			$sort: {
+				"Items.publish_time": 1,
+			},
+		},
+		{
 			$group: {
 				_id: {
 					$week: "$Items.publish_time",

@@ -39,12 +39,12 @@ export default function ClassJoinedCellQuiz({ weekItem }) {
 								: null
 						}
 					>
-						{weekItem.quizDatas.quiz_title}
+						{weekItem.quizDatas.title}
 					</div>
 					<div className='text-2xs'>
 						{/* Deadline: {deadlineDate} {deadlineTime} */}
 					</div>
-					<p className='text-xs'>{weekItem.quizDatas.quiz_description} </p>
+					<p className='text-xs'>{weekItem.quizDatas.description} </p>
 				</div>
 			</div>
 		</div>

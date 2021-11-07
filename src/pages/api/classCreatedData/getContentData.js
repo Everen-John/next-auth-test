@@ -19,7 +19,7 @@ export default async function getContentData(req, res) {
 	var pipeline = [
 		{
 			$match: {
-				_id: new ObjectId("6140115086beabb9ec5be370"),
+				_id: new ObjectId(intakeid),
 			},
 		},
 		{
@@ -29,7 +29,7 @@ export default async function getContentData(req, res) {
 		},
 		{
 			$match: {
-				content_oIDs: new ObjectId("6173234145f82015655d20c4"),
+				content_oIDs: new ObjectId(contentid),
 			},
 		},
 		{
@@ -52,5 +52,7 @@ export default async function getContentData(req, res) {
 
 	var cursor = await collection.aggregate(pipeline, options)
 	var finalData = await cursor.toArray()
+
+	console.log(finalData[0])
 	res.status(200).json(finalData[0])
 }

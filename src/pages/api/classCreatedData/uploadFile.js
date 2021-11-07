@@ -15,8 +15,7 @@ export const config = {
 	},
 }
 
-export default uploadFile = async (req, res) => {
-	let intake_oID = "6140115086beabb9ec5be370"
+export default async function uploadFile(req, res) {
 	const form = new formidable.IncomingForm()
 	form.uploadDir = "./public/uploads/"
 	form.keepExtensions = true
@@ -115,7 +114,6 @@ const uploadFileDataToMongoDB = async (S3Results) => {
 		}, transactionOptions)
 	} catch (e) {
 		console.log(e)
-		reject()
 	} finally {
 		await session.endSession()
 		resolve()

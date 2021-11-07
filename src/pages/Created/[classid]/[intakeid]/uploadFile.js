@@ -45,7 +45,7 @@ const useUppyFunc = () => {
 	})
 
 	uppy.on("complete", (result) => {
-		const url = result.successful[0].uploadURL
+		// const url = result.successful[0].uploadURL
 		console.log("successful upload", result)
 	})
 
