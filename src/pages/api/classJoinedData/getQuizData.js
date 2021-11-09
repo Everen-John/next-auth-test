@@ -20,7 +20,7 @@ export default async function getQuizData(req, res) {
 	var pipeline = [
 		{
 			$match: {
-				_id: new ObjectId("6140115086beabb9ec5be370"),
+				_id: new ObjectId(intakeid),
 			},
 		},
 		{
@@ -36,7 +36,7 @@ export default async function getQuizData(req, res) {
 		},
 		{
 			$match: {
-				quiz_oIDs: new ObjectId("61865a99e58d5892ab28229c"),
+				quiz_oIDs: new ObjectId(quizid),
 			},
 		},
 		{
@@ -57,11 +57,21 @@ export default async function getQuizData(req, res) {
 		},
 		{
 			$project: {
+				"quizData.questions.fitb_answers": 0,
+				"quizData.questions.checkbox_answers": 0,
+				"quizData.questions.radio_answer": 0,
+				"quizData.questions.essay_answer": 0,
+			},
+		},
+		{
+			$project: {
 				_id: "$quizData._id",
 				title: "$quizData.title",
 				description: "$quizData.description",
 				publish_time: "$quizData.publish_time",
 				deadline: "$quizData.deadline",
+				questions: "$quizData.questions",
+				completionTime: "$quizData.completionTime",
 			},
 		},
 	]

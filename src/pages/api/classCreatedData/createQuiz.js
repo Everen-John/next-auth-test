@@ -38,6 +38,7 @@ export default async function createQuiz(req, res) {
 					publish_time: new Date(formData.publish_time),
 					deadline: new Date(formData.deadline),
 					questions: formData.questions,
+					completionTime: formData.completionTime,
 				},
 				{ session }
 			)

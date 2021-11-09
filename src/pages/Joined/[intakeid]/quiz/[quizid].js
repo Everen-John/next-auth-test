@@ -18,6 +18,9 @@ export default function ContentId() {
 	const { intakeid, quizid, intake_name } = router.query
 	const [quizData, setQuizData] = useState()
 	const [quizEnabled, setQuizEnabled] = useState(false)
+	const [answerSheet, setAnswerSheet] = useState()
+	const [startQuiz, setStartQuiz] = useState(false)
+	const [questionIndex, setQuestionIndex] = useState(0)
 
 	const getQuiz = async () => {
 		console.log("Ran getQuiz")
@@ -48,6 +51,49 @@ export default function ContentId() {
 		}
 	}
 
+	const generateAnswerSheet = () => {
+		const fitbAnswerGenerator = (length) => {
+			let answerArray = []
+			for (let i = 0; i < length; i++) {
+				answerArray.push("")
+			}
+			return answerArray
+		}
+		let questions = JSON.parse(JSON.stringify(quizData.questions))
+		let answerSheet = []
+		questions.map((item, key) => {
+			switch (item.question_type) {
+				case "FITB":
+					answerSheet.push({
+						type: "fitb",
+						answers: fitbAnswerGenerator(item.fitb_answers_length),
+					})
+					break
+				case "checkbox":
+					answerSheet.push({
+						type: "checkbox",
+						answers: [],
+					})
+					break
+				case "radio":
+					answerSheet.push({
+						type: "radio",
+						answers: null,
+					})
+					break
+				case "essay":
+					answerSheet.push({
+						type: "essay",
+						answers: "",
+					})
+					break
+				default:
+					break
+			}
+		})
+		setAnswerSheet(answerSheet)
+	}
+
 	useEffect(async () => {
 		console.log("router query", router.query)
 		if (intakeid && quizid && status === "authenticated") {
@@ -61,9 +107,15 @@ export default function ContentId() {
 	useEffect(() => {
 		console.log("quizData", quizData)
 		if (quizData) {
-			setQuizEnabled(true)
+			generateAnswerSheet()
 		}
 	}, [quizData])
+
+	useEffect(() => {
+		if (answerSheet) {
+			setQuizEnabled(true)
+		}
+	}, [answerSheet])
 
 	return (
 		<Layout session={session}>
@@ -81,14 +133,26 @@ export default function ContentId() {
 					<a className='text-green-400 mx-2 '>{intake_name}</a>
 				</Link>
 			</div>
-			<div className='bg-gray-100 m-2'>
-				<div>Quiz Stuff here!</div>
-				{quizEnabled ? (
-					<div>Quiz is enabled</div>
-				) : (
-					<div>Quiz is not enabled</div>
-				)}
-			</div>
+
+			{quizEnabled ? (
+				<div className='p-3'>
+					<div className='mb-3 bg-green-100'>
+						<div>{quizData.title}</div>
+						<div>{quizData.description}</div>
+						<div>
+							You have {quizData.completionTime} minutes to complete the quiz.
+						</div>
+						<div>Click Start whenever you're ready.</div>
+					</div>
+					<div>
+						<div className=' mb-3 overflow-visible bg-green-300'>
+							<button className=''>Start</button>
+						</div>
+					</div>
+				</div>
+			) : (
+				<div>Quiz is not enabled</div>
+			)}
 		</Layout>
 	)
 }

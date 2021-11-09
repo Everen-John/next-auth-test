@@ -243,7 +243,7 @@ export default function CreateDocument() {
 							className='border rounded-md p-1 pl-2 w-full'
 							name='publish_time'
 							selected={formData.publish_time}
-							dateFormat='dd/MM/yyyy'
+							dateFormat='dd/MM/yyyy h:mm aa'
 							onChange={(date) =>
 								setFormData({
 									...formData,

@@ -21,7 +21,11 @@ export default function FITBQuizType({
 	const addAnotherAnswer = () => {
 		let tempFITBAnswers = FITBData.fitb_answers
 		tempFITBAnswers.push("")
-		let tempFITBData = { ...FITBData, fitb_answers: tempFITBAnswers }
+		let tempFITBData = {
+			...FITBData,
+			fitb_answers: tempFITBAnswers,
+			fitb_answers_count: tempFITBAnswers.length,
+		}
 		quizDataChangeHandler(tempFITBData, index)
 	}
 
@@ -31,7 +35,11 @@ export default function FITBQuizType({
 		if (tempFITBAnswers.length === 0) {
 			tempFITBAnswers.push("")
 		}
-		let tempFITBData = { ...FITBData, fitb_answers: tempFITBAnswers }
+		let tempFITBData = {
+			...FITBData,
+			fitb_answers: tempFITBAnswers,
+			fitb_answers_count: tempFITBAnswers.length,
+		}
 		quizDataChangeHandler(tempFITBData, index)
 	}
 

@@ -16,10 +16,11 @@ import * as yup from "yup"
 // import RadioQuizType from "../../../../components/classid/createQuiz/RadioQuizType"
 
 let quizFormUploadSchema = yup.object().shape({
-	title: yup.string().max(40, "max title reached!").required(),
+	title: yup.string().max(200, "max title reached!").required(),
 	description: yup.string().max(100, "Reached Maximum Length!").required(),
 	publish_time: yup.date().required(),
 	deadline: yup.date().required(),
+	completionTime: yup.number().min(1).max(300).required(),
 	in_intake_oID: yup.string().required(),
 	questions: yup.array().min(1).required(),
 })
@@ -120,6 +121,7 @@ export default function CreateQuiz() {
 		questions: {},
 	})
 	const [quizData, setQuizData] = useState([])
+	const [enableSubmit, setEnableSubmit] = useState(false)
 
 	const uploadQuiz = async () => {
 		console.log("Ran uploadQuiz")
@@ -227,7 +229,10 @@ export default function CreateQuiz() {
 	}
 
 	const addNewEssayQuestion = () => {
-		setQuizData([...quizData, { question_text: "", question_type: "essay" }])
+		setQuizData([
+			...quizData,
+			{ question_text: "", question_type: "essay", essay_answer: "subjective" },
+		])
 	}
 
 	const quizDataChangeHandler = (quizDataChild, quizDataChildIndex) => {
@@ -240,8 +245,11 @@ export default function CreateQuiz() {
 		loadQuill()
 	}, [])
 
-	useEffect(() => {
+	useEffect(async () => {
 		console.log(formData)
+		let validationRes = await quizFormUploadSchema.isValid(formData)
+		quizFormUploadSchema.validate(formData).catch((err) => console.log(err))
+		setEnableSubmit(validationRes)
 	}, [formData])
 
 	useEffect(async () => {
@@ -311,7 +319,10 @@ export default function CreateQuiz() {
 								className='border rounded-md p-1 pl-2 w-full text-black'
 								name='publish_time'
 								selected={formData.publish_time}
-								dateFormat='dd/MM/yyyy'
+								dateFormat='dd/MM/yyyy h:mm aa'
+								showTimeSelect
+								timeFormat='HH:mm'
+								timeIntervals={15}
 								onChange={(date) =>
 									setFormData({
 										...formData,
@@ -326,11 +337,32 @@ export default function CreateQuiz() {
 								className='border rounded-md p-1 pl-2 w-full text-black'
 								name='deadline'
 								selected={formData.deadline}
-								dateFormat='dd/MM/yyyy'
+								showTimeSelect
+								timeFormat='HH:mm'
+								timeIntervals={15}
+								dateFormat='dd/MM/yyyy h:mm aa'
 								onChange={(date) =>
 									setFormData({
 										...formData,
 										deadline: new Date(date),
+									})
+								}
+							/>
+						</div>
+						<div className=' mb-1 h-14 w-full text-xs text-white z-9999'>
+							<div>Time to Complete</div>
+							<input
+								className='border rounded-md p-1 pl-2 w-full text-black'
+								name='completionTime'
+								type='number'
+								min={1}
+								max={300}
+								placeholder='Completion time (in minutes)'
+								value={formData.completionTime}
+								onChange={(e) =>
+									setFormData({
+										...formData,
+										completionTime: parseInt(e.target.value),
 									})
 								}
 							/>
@@ -412,9 +444,9 @@ export default function CreateQuiz() {
 						  })}
 					<button
 						type='submit'
-						disabled={quizData.length > 0 ? false : true}
+						disabled={!enableSubmit}
 						className={`${
-							quizData.length > 0
+							enableSubmit
 								? "bg-green-600 text-white font-bold transition-opacity shadow-lg border border-green-900 "
 								: "bg-green-900 bg-opacity-50 text-opacity-50 text-gray-50 scale-50"
 						} mt-4 mb-1 h-8 w-16 text-xs rounded-lg p-1`}
