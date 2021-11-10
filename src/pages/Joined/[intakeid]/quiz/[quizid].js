@@ -9,6 +9,7 @@ import Layout from "../../../../components/master/layout"
 import DatePicker from "react-datepicker"
 import ClassJoinedCellAnnouncement from "../../../../components/intakeid/classJoinedCellAnnouncement"
 import { route } from "next/dist/server/router"
+import RadioComponent from "../../../../components/intakeid/quizid/radioComponent"
 
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false })
 
@@ -19,8 +20,9 @@ export default function ContentId() {
 	const [quizData, setQuizData] = useState()
 	const [quizEnabled, setQuizEnabled] = useState(false)
 	const [answerSheet, setAnswerSheet] = useState()
-	const [startQuiz, setStartQuiz] = useState(false)
+	const [startQuiz, setStartQuiz] = useState(0)
 	const [questionIndex, setQuestionIndex] = useState(0)
+	const [questionData, setQuestionData] = useState()
 
 	const getQuiz = async () => {
 		console.log("Ran getQuiz")
@@ -49,6 +51,10 @@ export default function ContentId() {
 				console.log(e)
 			}
 		}
+	}
+
+	const loadQuill = async () => {
+		const Quill = await require("react-quill").Quill
 	}
 
 	const generateAnswerSheet = () => {
@@ -94,11 +100,34 @@ export default function ContentId() {
 		setAnswerSheet(answerSheet)
 	}
 
+	const generateOneQuestion = () => {
+		let nextquestion
+		let questionData = quizData.questions[questionIndex]
+		switch (quizData.questions[questionIndex].question_type) {
+			case "fitb":
+				break
+			case "radio":
+				return (
+					<RadioComponent index={questionIndex} questionData={questionData} />
+				)
+				break
+			case "checkbox":
+				break
+			case "essay":
+				break
+			default:
+				break
+		}
+
+		return nextquestion
+	}
+
 	useEffect(async () => {
 		console.log("router query", router.query)
 		if (intakeid && quizid && status === "authenticated") {
 			console.log("Ready!")
 			getQuiz()
+			await loadQuill()
 		} else {
 			console.log("Waiting for initial data!")
 		}
@@ -116,6 +145,21 @@ export default function ContentId() {
 			setQuizEnabled(true)
 		}
 	}, [answerSheet])
+
+	useEffect(async () => {
+		console.log("startQuiz", startQuiz)
+		if (startQuiz === 1) {
+			setQuestionData(quizData.questions[0])
+			setQuestionIndex(0)
+			setStartQuiz(2)
+		}
+	}, [startQuiz])
+
+	useEffect(() => {
+		if (quizData) {
+			console.log("questionData", questionData)
+		}
+	}, [questionData])
 
 	return (
 		<Layout session={session}>
@@ -136,17 +180,47 @@ export default function ContentId() {
 
 			{quizEnabled ? (
 				<div className='p-3'>
-					<div className='mb-3 bg-green-100'>
-						<div>{quizData.title}</div>
-						<div>{quizData.description}</div>
-						<div>
-							You have {quizData.completionTime} minutes to complete the quiz.
-						</div>
-						<div>Click Start whenever you're ready.</div>
-					</div>
 					<div>
-						<div className=' mb-3 overflow-visible bg-green-300'>
-							<button className=''>Start</button>
+						<div className='mb-3'>
+							<div className='bg-gray-800 text-green-400 text-xl font-bold p-2 rounded-md shadow-md mx-2'>
+								{quizData.title}
+							</div>
+							{startQuiz === 0 ? (
+								<div>
+									<div className='bg-gray-100 m-3 shadow-md rounded-md p-3 flex flex-col items-center h-80 justify-around'>
+										<div className=''>
+											<div className='text-2xs'>{quizData.description}</div>
+											<div className='text-2xs'>
+												You have {quizData.completionTime} minutes to complete
+												the quiz. There are {quizData.questions.length}{" "}
+												questions in this quiz.
+											</div>
+											<div className='text-base'>
+												Click Start whenever you're ready.
+											</div>
+										</div>
+
+										<button
+											className={`mb-3 
+									overflow-visible 
+									text-white 
+									shadow-md 
+									text-2xl 
+									font-semibold 
+									px-10 
+									rounded-md 
+									bg-gradient-to-r 
+									from-green-500
+									to-green-800 
+									animate-gradient-xy`}
+											onClick={(e) => setStartQuiz(1)}
+										>
+											Start
+										</button>
+									</div>
+								</div>
+							) : null}
+							{startQuiz === 2 ? generateOneQuestion() : null}
 						</div>
 					</div>
 				</div>
