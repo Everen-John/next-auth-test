@@ -8,7 +8,7 @@ import { useState } from "react"
 
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false })
 
-export default function RadioComponent({
+export default function EssayComponent({
 	index,
 	questionData,
 	answerRegisterer,
@@ -20,9 +20,9 @@ export default function RadioComponent({
 }) {
 	console.log("answerPage", answerPage)
 
-	const selectAnswer = (e) => {
-		let selectedAnswer = parseInt(e.target.value)
-		let answerPageTemp = { ...answerPage, answers: selectedAnswer }
+	const writeAnswer = (e) => {
+		console.log(e.target.value)
+		let answerPageTemp = { ...answerPage, answers: e.target.value }
 		answerRegisterer(index, answerPageTemp)
 	}
 
@@ -51,22 +51,16 @@ export default function RadioComponent({
 						/>
 					</div>
 				</div>
-				<div className='place-self-start'>
-					<div>Pick the correct answer.</div>
-					{questionData.radio_values.map((item, key) => {
-						return (
-							<div className='my-1'>
-								<input
-									className='form-radio inline-block self-center mr-2'
-									type='radio'
-									name='radioAnswer'
-									value={key}
-									onClick={selectAnswer}
-								></input>
-								<p className='inline-block'>{item}</p>
-							</div>
-						)
-					})}
+				<div className='place-self-start w-full'>
+					<div className='text-2xs'>Write your answer below:</div>
+					<div className='my-1'>
+						<textarea
+							class='form-textarea mt-1 w-full block max-w-full text-sm'
+							rows='7'
+							placeholder='Enter some long form content.'
+							onChange={writeAnswer}
+						></textarea>
+					</div>
 				</div>
 			</div>
 			<div>

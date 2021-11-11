@@ -49,6 +49,15 @@ module.exports = {
 			"1/2": "50%",
 			"3/4": "75%",
 			full: "100%",
+			"30vh": "30vh",
+			"40vh": "40vh",
+			"50vh": "50vh",
+			"60vh": "60vh",
+			"70vh": "70vh",
+
+			"80vh": "80vh",
+			"50rem": "50rem",
+			"80rem": "80rem",
 		},
 		extend: {
 			animation: {

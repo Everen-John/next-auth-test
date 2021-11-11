@@ -8,7 +8,7 @@ import { useState } from "react"
 
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false })
 
-export default function RadioComponent({
+export default function FitbComponent({
 	index,
 	questionData,
 	answerRegisterer,
@@ -20,10 +20,13 @@ export default function RadioComponent({
 }) {
 	console.log("answerPage", answerPage)
 
-	const selectAnswer = (e) => {
-		let selectedAnswer = parseInt(e.target.value)
-		let answerPageTemp = { ...answerPage, answers: selectedAnswer }
-		answerRegisterer(index, answerPageTemp)
+	const writeAnswer = ({ e, key }) => {
+		console.log(e.target.value)
+		console.log(key)
+		let answerArrayTemp = JSON.parse(JSON.stringify(answerPage))
+		answerArrayTemp.answers[key] = e.target.value
+		console.log(answerArrayTemp)
+		answerRegisterer(index, answerArrayTemp)
 	}
 
 	const enableNextButton = () => {
@@ -35,7 +38,6 @@ export default function RadioComponent({
 	}
 
 	// enableNextButton()
-
 	return (
 		<div className='mb-10'>
 			<div className='bg-gray-100 m-3 shadow-md rounded-md p-3 flex flex-col items-center min-h-60vh justify-start '>
@@ -52,18 +54,21 @@ export default function RadioComponent({
 					</div>
 				</div>
 				<div className='place-self-start'>
-					<div>Pick the correct answer.</div>
-					{questionData.radio_values.map((item, key) => {
+					<div>Fill in the blanks</div>
+					{answerPage.answers.map((item, key) => {
 						return (
 							<div className='my-1'>
+								<div className='text-2xs inline-block mr-2'>{key + 1}.</div>
 								<input
-									className='form-radio inline-block self-center mr-2'
-									type='radio'
-									name='radioAnswer'
-									value={key}
-									onClick={selectAnswer}
+									className='form-text inline-block mr-2 py-1 px-4 rounded-md border border-solid border-gray-300 shadow-md'
+									type='text'
+									name='fitbAnswer'
+									key={key}
+									value={item}
+									onChange={(e) => {
+										writeAnswer({ e, key })
+									}}
 								></input>
-								<p className='inline-block'>{item}</p>
 							</div>
 						)
 					})}

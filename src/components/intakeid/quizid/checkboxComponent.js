@@ -8,7 +8,7 @@ import { useState } from "react"
 
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false })
 
-export default function RadioComponent({
+export default function CheckboxComponent({
 	index,
 	questionData,
 	answerRegisterer,
@@ -20,14 +20,40 @@ export default function RadioComponent({
 }) {
 	console.log("answerPage", answerPage)
 
-	const selectAnswer = (e) => {
-		let selectedAnswer = parseInt(e.target.value)
-		let answerPageTemp = { ...answerPage, answers: selectedAnswer }
-		answerRegisterer(index, answerPageTemp)
+	const checkboxClickedHandler = (key, e) => {
+		if (e.target.checked) {
+			console.log("e.target.checked", e.target.checked)
+			selectAnswerHandler(key)
+		} else {
+			console.log("e.target.checked", e.target.checked)
+			removeAnswerHandler(key)
+		}
+	}
+
+	const selectAnswerHandler = (key) => {
+		let tempCheckboxAnswers = answerPage.answers
+		// tempCheckboxAnswers.splice(key, 0, key)
+		tempCheckboxAnswers.push(key)
+
+		let tempCheckboxData = {
+			...answerPage,
+			answers: tempCheckboxAnswers,
+		}
+		answerRegisterer(index, tempCheckboxData)
+	}
+
+	const removeAnswerHandler = (key) => {
+		let tempCheckboxAnswers = answerPage.answers
+		tempCheckboxAnswers.splice(tempCheckboxAnswers.indexOf(key), 1)
+		let tempCheckboxData = {
+			...answerPage,
+			answers: tempCheckboxAnswers,
+		}
+		answerRegisterer(index, tempCheckboxData)
 	}
 
 	const enableNextButton = () => {
-		if (answerPage.answers != null) {
+		if (answerPage.answers.length != 0) {
 			nextButtonEnabler(true)
 		} else {
 			nextButtonEnabler(false)
@@ -52,18 +78,20 @@ export default function RadioComponent({
 					</div>
 				</div>
 				<div className='place-self-start'>
-					<div>Pick the correct answer.</div>
-					{questionData.radio_values.map((item, key) => {
+					<div>Select the correct answers.</div>
+					{questionData.checkbox_values.map((item, key) => {
 						return (
-							<div className='my-1'>
+							<div className='my-1 flex flex-row'>
 								<input
-									className='form-radio inline-block self-center mr-2'
-									type='radio'
-									name='radioAnswer'
+									className='form-checkbox flex-shrink self-center mr-2 shadow-md'
+									type='checkbox'
+									name='checkboxAnswer'
 									value={key}
-									onClick={selectAnswer}
+									onClick={(e) => checkboxClickedHandler(key, e)}
 								></input>
-								<p className='inline-block'>{item}</p>
+								<div>
+									<p className=' flex-grow text-sm'>{item}</p>
+								</div>
 							</div>
 						)
 					})}
