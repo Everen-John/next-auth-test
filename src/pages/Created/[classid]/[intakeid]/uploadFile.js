@@ -185,6 +185,9 @@ export default function UploadFile() {
 								className='border rounded-lg p-1 w-full'
 								name='publish_time'
 								selected={formData.publish_time}
+								showTimeSelect
+								timeFormat='HH:mm'
+								timeIntervals={15}
 								dateFormat='dd/MM/yyyy h:mm aa'
 								onChange={(date) =>
 									setFormData({

@@ -42,6 +42,7 @@ export default function QuizId() {
 			.then(async ({ answerSheet, quizData }) => {
 				setAnswerSheet(answerSheet)
 				setQuizData(quizData)
+				// submitMockQuiz()
 			})
 			.then(() => {
 				setQuizEnabled(true)
@@ -50,6 +51,17 @@ export default function QuizId() {
 			.catch((e) => {
 				window.alert("failed to load:", e)
 			})
+	}
+
+	const performSubmissionAndEndQuizSession = async () => {
+		return new Promise(async (resolve, reject) => {
+			let submissionStatus = await submitQuiz()
+			resolve(submissionStatus)
+		}).then((submissionStatus) => {
+			if (submissionStatus.msg === "ok") {
+				window.alert("Submitted successfully!")
+			}
+		})
 	}
 
 	const getQuiz = async () => {
@@ -83,6 +95,77 @@ export default function QuizId() {
 			}
 		}
 	}
+
+	const submitQuiz = async () => {
+		console.log("in submit quiz", answerSheet)
+		try {
+			let finalResults = await fetch("/api/classJoinedData/submitQuizAnswer", {
+				method: "POST", // *GET, POST, PUT, DELETE, etc.
+				mode: "cors", // no-cors, *cors, same-origin
+				cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
+				credentials: "same-origin", // include, *same-origin, omit
+				headers: {
+					"Content-Type": "application/json",
+				},
+				redirect: "follow", // manual, *follow, error
+				referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+				body: JSON.stringify({
+					user: session.user.id,
+					quizid: quizid,
+					intakeid: intakeid,
+					answerSheet: answerSheet,
+					completionTime: quizData.completionTime,
+				}), // body data type must match "Content-Type" header
+			})
+				.then((res) => res.json())
+				.then((res) => {
+					console.log(res)
+					return res
+				})
+				.catch((e) => console.log(e))
+			return finalResults
+		} catch (e) {
+			console.log(e)
+		}
+	}
+
+	// const submitMockQuiz = async () => {
+	// 	console.log("in submit quiz", answerSheet)
+	// 	try {
+	// 		let finalResults = await fetch("/api/classJoinedData/submitQuizAnswer", {
+	// 			method: "POST", // *GET, POST, PUT, DELETE, etc.
+	// 			mode: "cors", // no-cors, *cors, same-origin
+	// 			cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
+	// 			credentials: "same-origin", // include, *same-origin, omit
+	// 			headers: {
+	// 				"Content-Type": "application/json",
+	// 			},
+	// 			redirect: "follow", // manual, *follow, error
+	// 			referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+	// 			body: JSON.stringify({
+	// 				user: session.user.id,
+	// 				quizid: quizid,
+	// 				intakeid: intakeid,
+	// 				answerSheet: [
+	// 					{ type: "radio", answers: 1 },
+	// 					{ type: "fitb", answers: ["quick", "over"] },
+	// 					{ type: "checkbox", answers: [0, 3] },
+	// 					{ type: "essay", answers: "yes" },
+	// 				],
+	// 				completionTime: 25.01,
+	// 			}), // body data type must match "Content-Type" header
+	// 		})
+	// 			.then((res) => res.json())
+	// 			.then((res) => {
+	// 				console.log(res)
+	// 				return res
+	// 			})
+	// 			.catch((e) => console.log(e))
+	// 		return finalResults
+	// 	} catch (e) {
+	// 		console.log(e)
+	// 	}
+	// }
 
 	const loadQuill = async () => {
 		const Quill = await require("react-quill").Quill
@@ -284,7 +367,7 @@ export default function QuizId() {
 				generateOneQuestion()
 			} else if (questionIndex > quizData.questions.length - 1) {
 				console.log("Submission time!")
-				window.alert("Your quiz has been submitted!")
+				performSubmissionAndEndQuizSession()
 			}
 		}
 	}, [questionIndex])
