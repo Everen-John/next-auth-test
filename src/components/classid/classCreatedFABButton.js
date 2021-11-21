@@ -98,13 +98,23 @@ export default function ClassCreatedFABButton({ classid, intakeid }) {
 								<div className='inline-block'>Content</div>
 							</button>
 						</Link>
-						<button
-							onClick={handleAddAnnouncement}
-							className='px-3 ml-auto mr-0 mb-1 list-item text-white w-auto h-10 bg-green-600 rounded-full hover:bg-green-700 active:shadow-lg mouse shadow focus:outline-none'
+						<Link
+							href={`/Created/${classid}/${intakeid}/createAnnouncement?intake_name=${encodeURIComponent(
+								JSON.parse(
+									localStorage.getItem(
+										`classId${classid}lastPickedAccordianMenu`
+									)
+								).intake_name
+							)}`}
 						>
-							<ExclamationCircleIcon className='max-h-10 w-6 mr-2 inline-block' />
-							<div className='inline-block'>Announcement</div>
-						</button>
+							<button
+								onClick={handleAddAnnouncement}
+								className='px-3 ml-auto mr-0 mb-1 list-item text-white w-auto h-10 bg-green-600 rounded-full hover:bg-green-700 active:shadow-lg mouse shadow focus:outline-none'
+							>
+								<ExclamationCircleIcon className='max-h-10 w-6 mr-2 inline-block' />
+								<div className='inline-block'>Announcement</div>
+							</button>
+						</Link>
 					</div>
 				) : null}
 			</XyzTransitionGroup>

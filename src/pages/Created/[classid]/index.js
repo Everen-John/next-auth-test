@@ -7,13 +7,7 @@ import { XyzTransitionGroup } from "@animxyz/react"
 
 import Layout from "../../../components/master/layout"
 import ClassCreatedContentBlock from "../../../components/classid/classCreatedContentBlock"
-import {
-	BookOpenIcon,
-	AcademicCapIcon,
-	CloudUploadIcon,
-	AnnotationIcon,
-	ExclamationCircleIcon,
-} from "@heroicons/react/outline"
+import { BookOpenIcon } from "@heroicons/react/outline"
 import { PlusIcon } from "@heroicons/react/solid"
 
 import FABButton from "../../../components/classid/classCreatedFABButton"
@@ -186,6 +180,7 @@ export default function Index() {
 					<ClassCreatedContentBlock
 						intakeCreated={intakeData}
 						classid={classid}
+						intakeid={intakeId}
 					/>
 				</div>
 			)}

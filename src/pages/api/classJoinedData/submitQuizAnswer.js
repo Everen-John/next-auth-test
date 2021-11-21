@@ -3,6 +3,7 @@ import { ObjectId } from "bson"
 
 export default async function submitQuizAnswer(req, res) {
 	let userid = req.body.user
+	let name = req.body.name
 	let quizid = req.body.quizid
 	let intakeid = req.body.intakeid
 	let answerSheet = req.body.answerSheet
@@ -30,6 +31,7 @@ export default async function submitQuizAnswer(req, res) {
 				completionTime: res.completionTime,
 				userid: userid,
 				completionTimeLeft,
+				name: name,
 			})
 			console.log("quizAttempterReportObject", quizAttempterReportObject)
 			let quizCollData = await insertAttemptOntoQuiz(
@@ -75,6 +77,7 @@ const performComparison = ({
 	completionTime,
 	userid,
 	completionTimeLeft,
+	name,
 }) => {
 	let tempAnswerSheet = JSON.parse(JSON.stringify(answerSheet))
 	let tempActualAnswers = JSON.parse(JSON.stringify(actualAnswers)).filter(
@@ -154,7 +157,8 @@ const performComparison = ({
 	})
 	console.log("Attempter Score", attempterScore, "%")
 	let quizAttempterObject = {
-		attempter_oID: userid,
+		attempter_name: name,
+		attempter_oID: ObjectId(userid),
 		score: parseFloat(attempterScore.toFixed(2)),
 		attempter_answers: tempAnswerSheet,
 		completedAfter: parseFloat(

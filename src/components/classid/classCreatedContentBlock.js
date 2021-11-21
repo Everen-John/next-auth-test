@@ -7,12 +7,17 @@ import { BookOpenIcon } from "@heroicons/react/outline"
 import ClassJoinedWeeklyBlock from "./classCreatedWeeklyBlock"
 import ClassCreatedYearlyBlock from "./classCreatedYearlyBlock"
 
-export default function ClassCreatedContentBlock({ intakeCreated, classid }) {
+export default function ClassCreatedContentBlock({
+	intakeCreated,
+	classid,
+	intakeid,
+}) {
 	return (
 		<div className='bg-gray-700 p-1'>
 			{intakeCreated.yearlyItems.map((yearlyItem, key) => {
 				return (
 					<ClassCreatedYearlyBlock
+						intakeid={intakeid}
 						key={key}
 						yearlyItem={yearlyItem}
 						classid={classid}

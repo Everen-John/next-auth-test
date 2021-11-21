@@ -37,6 +37,10 @@ export default function checkboxQuizType({
 		if (tempcheckboxValues.length <= 1) {
 			tempcheckboxValues.push("")
 		}
+		let tempCheckboxAnswers = checkboxData.checkbox_answers
+		if (tempCheckboxAnswers.indexOf(key) !== -1) {
+			checkboxClickedHandler(key, { target: { checked: false } })
+		}
 		let tempcheckboxData = {
 			...checkboxData,
 			checkbox_values: tempcheckboxValues,
@@ -118,6 +122,9 @@ export default function checkboxQuizType({
 									name='checkboxAnswer'
 									value={key}
 									onChange={(e) => checkboxClickedHandler(key, e)}
+									checked={
+										checkboxData.checkbox_answers.includes(key) ? true : false
+									}
 								></input>
 								<input
 									type='text'

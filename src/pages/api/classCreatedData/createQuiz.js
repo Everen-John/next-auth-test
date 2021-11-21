@@ -39,6 +39,7 @@ export default async function createQuiz(req, res) {
 					deadline: new Date(formData.deadline),
 					questions: formData.questions,
 					completionTime: formData.completionTime,
+					attempters: [],
 				},
 				{ session }
 			)

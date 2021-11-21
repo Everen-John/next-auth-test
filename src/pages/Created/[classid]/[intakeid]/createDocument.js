@@ -10,7 +10,7 @@ import DatePicker from "react-datepicker"
 
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false })
 
-let fileUploadSchema = yup.object().shape({
+let contentSchema = yup.object().shape({
 	title: yup.string().max(40, "max title reached!").required(),
 	description: yup.string().max(100, "Reached Maximum Length!").required(),
 	publish_time: yup.date().required(),
@@ -166,7 +166,7 @@ export default function CreateDocument() {
 	}, [editorData])
 
 	useEffect(async () => {
-		await fileUploadSchema.isValid(formData).then((valid) => {
+		await contentSchema.isValid(formData).then((valid) => {
 			console.log("valid", valid)
 			if (valid) {
 				setUploadButtonActive(true)

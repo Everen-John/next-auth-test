@@ -4,7 +4,11 @@ import Image from "next/image"
 import Link from "next/link"
 import { AnnotationIcon } from "@heroicons/react/outline"
 
-export default function ClassCreatedCellContent({ weekItem, classid }) {
+export default function ClassCreatedCellContent({
+	weekItem,
+	classid,
+	intakeid,
+}) {
 	let deadline = new Date(weekItem.contentDatas.deadline)
 	let deadlineDate = deadline.toLocaleDateString("en-GB")
 	let deadlineTime = deadline.toLocaleTimeString("en-GB", {

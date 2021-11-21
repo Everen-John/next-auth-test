@@ -24,7 +24,7 @@ export default function FITBQuizType({
 		let tempFITBData = {
 			...FITBData,
 			fitb_answers: tempFITBAnswers,
-			fitb_answers_count: tempFITBAnswers.length,
+			fitb_answers_length: tempFITBAnswers.length,
 		}
 		quizDataChangeHandler(tempFITBData, index)
 	}
@@ -38,7 +38,7 @@ export default function FITBQuizType({
 		let tempFITBData = {
 			...FITBData,
 			fitb_answers: tempFITBAnswers,
-			fitb_answers_count: tempFITBAnswers.length,
+			fitb_answers_length: tempFITBAnswers.length,
 		}
 		quizDataChangeHandler(tempFITBData, index)
 	}

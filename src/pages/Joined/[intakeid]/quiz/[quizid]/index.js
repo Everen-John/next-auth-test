@@ -5,14 +5,14 @@ import Link from "next/link"
 import Head from "next/head"
 import * as yup from "yup"
 import dynamic from "next/dynamic"
-import Layout from "../../../../components/master/layout"
+import Layout from "../../../../../components/master/layout"
 import DatePicker from "react-datepicker"
-import ClassJoinedCellAnnouncement from "../../../../components/intakeid/classJoinedCellAnnouncement"
+import ClassJoinedCellAnnouncement from "../../../../../components/intakeid/classJoinedCellAnnouncement"
 import { route } from "next/dist/server/router"
-import RadioComponent from "../../../../components/intakeid/quizid/radioComponent"
-import FitbComponent from "../../../../components/intakeid/quizid/fitbComponent"
-import CheckboxComponent from "../../../../components/intakeid/quizid/checkboxComponent"
-import EssayComponent from "../../../../components/intakeid/quizid/essayComponent"
+import RadioComponent from "../../../../../components/intakeid/quizid/radioComponent"
+import FitbComponent from "../../../../../components/intakeid/quizid/fitbComponent"
+import CheckboxComponent from "../../../../../components/intakeid/quizid/checkboxComponent"
+import EssayComponent from "../../../../../components/intakeid/quizid/essayComponent"
 
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false })
 
@@ -31,10 +31,24 @@ export default function QuizId() {
 
 	const loadPage = async () => {
 		return new Promise(async (resolve, reject) => {
-			let quizData = await getQuiz()
-			let quill = await loadQuill()
-			resolve({ quizData, quill })
+			let quizAttemptCheck = await checkQuizAttempt()
+
+			resolve(quizAttemptCheck)
 		})
+			.then(async (quizAttemptCheck) => {
+				let quizData
+				let quill
+				if (quizAttemptCheck.attempted) {
+					router.push(
+						`/Joined/${intakeid}/quiz/${quizid}/quizReport?intake_name=TCP/IP`
+					)
+				} else {
+					quizData = await getQuiz()
+					quill = await loadQuill()
+				}
+
+				return { quizData, quill }
+			})
 			.then(async ({ quizData }) => {
 				let answerSheet = generateAnswerSheet(quizData)
 				return { answerSheet, quizData }
@@ -48,20 +62,56 @@ export default function QuizId() {
 				setQuizEnabled(true)
 				setQuestionIndex(0)
 			})
-			.catch((e) => {
-				window.alert("failed to load:", e)
-			})
+			.catch((e) => {})
 	}
 
 	const performSubmissionAndEndQuizSession = async () => {
+		console.log("Perform submission called")
 		return new Promise(async (resolve, reject) => {
 			let submissionStatus = await submitQuiz()
 			resolve(submissionStatus)
 		}).then((submissionStatus) => {
 			if (submissionStatus.msg === "ok") {
 				window.alert("Submitted successfully!")
+				router.push(
+					`/Joined/${intakeid}/quiz/${quizid}/quizReport?intake_name=${encodeURI(
+						intake_name
+					)}`
+				)
 			}
 		})
+	}
+
+	const checkQuizAttempt = async () => {
+		if (status === "authenticated") {
+			try {
+				let finalResults = await fetch("/api/classJoinedData/getQuizAttempt", {
+					method: "POST", // *GET, POST, PUT, DELETE, etc.
+					mode: "cors", // no-cors, *cors, same-origin
+					cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
+					credentials: "same-origin", // include, *same-origin, omit
+					headers: {
+						"Content-Type": "application/json",
+					},
+					redirect: "follow", // manual, *follow, error
+					referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+					body: JSON.stringify({
+						user: session.user.id,
+						quizid: quizid,
+						intakeid: intakeid,
+					}), // body data type must match "Content-Type" header
+				})
+					.then((res) => res.json())
+					.then((res) => {
+						console.log(res)
+						return res
+					})
+					.catch((e) => console.log(e))
+				return finalResults
+			} catch (e) {
+				console.log(e)
+			}
+		}
 	}
 
 	const getQuiz = async () => {
@@ -111,6 +161,7 @@ export default function QuizId() {
 				referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
 				body: JSON.stringify({
 					user: session.user.id,
+					name: session.user.name,
 					quizid: quizid,
 					intakeid: intakeid,
 					answerSheet: answerSheet,
@@ -128,44 +179,6 @@ export default function QuizId() {
 			console.log(e)
 		}
 	}
-
-	// const submitMockQuiz = async () => {
-	// 	console.log("in submit quiz", answerSheet)
-	// 	try {
-	// 		let finalResults = await fetch("/api/classJoinedData/submitQuizAnswer", {
-	// 			method: "POST", // *GET, POST, PUT, DELETE, etc.
-	// 			mode: "cors", // no-cors, *cors, same-origin
-	// 			cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
-	// 			credentials: "same-origin", // include, *same-origin, omit
-	// 			headers: {
-	// 				"Content-Type": "application/json",
-	// 			},
-	// 			redirect: "follow", // manual, *follow, error
-	// 			referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
-	// 			body: JSON.stringify({
-	// 				user: session.user.id,
-	// 				quizid: quizid,
-	// 				intakeid: intakeid,
-	// 				answerSheet: [
-	// 					{ type: "radio", answers: 1 },
-	// 					{ type: "fitb", answers: ["quick", "over"] },
-	// 					{ type: "checkbox", answers: [0, 3] },
-	// 					{ type: "essay", answers: "yes" },
-	// 				],
-	// 				completionTime: 25.01,
-	// 			}), // body data type must match "Content-Type" header
-	// 		})
-	// 			.then((res) => res.json())
-	// 			.then((res) => {
-	// 				console.log(res)
-	// 				return res
-	// 			})
-	// 			.catch((e) => console.log(e))
-	// 		return finalResults
-	// 	} catch (e) {
-	// 		console.log(e)
-	// 	}
-	// }
 
 	const loadQuill = async () => {
 		const Quill = await require("react-quill").Quill
@@ -431,7 +444,9 @@ export default function QuizId() {
 									</div>
 								</div>
 							) : null}
-							{startQuiz === 2 ? generateOneQuestion() : null}
+							{startQuiz === 2 && questionIndex <= quizData.questions.length - 1
+								? generateOneQuestion()
+								: null}
 						</div>
 					</div>
 				</div>

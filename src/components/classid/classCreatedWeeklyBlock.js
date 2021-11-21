@@ -11,6 +11,7 @@ export default function ClassCreatedWeeklyBlock({
 	yearedData,
 	setFolded,
 	classid,
+	intakeid,
 }) {
 	let firstDayOfWeek = new Date(yearedData.firstDayOfWeek).toLocaleDateString(
 		"en-GB"
@@ -32,6 +33,7 @@ export default function ClassCreatedWeeklyBlock({
 								weekItem={weekItem}
 								key={key}
 								classid={classid}
+								intakeid={intakeid}
 							/>
 						)
 					else if (weekItem.type === "announcement")
@@ -40,6 +42,7 @@ export default function ClassCreatedWeeklyBlock({
 								weekItem={weekItem}
 								key={key}
 								classid={classid}
+								intakeid={intakeid}
 							/>
 						)
 					else if (weekItem.type === "quiz")
@@ -48,6 +51,7 @@ export default function ClassCreatedWeeklyBlock({
 								weekItem={weekItem}
 								key={key}
 								classid={classid}
+								intakeid={intakeid}
 							/>
 						)
 					else if (weekItem.type === "files")
@@ -56,6 +60,7 @@ export default function ClassCreatedWeeklyBlock({
 								weekItem={weekItem}
 								key={key}
 								classid={classid}
+								intakeid={intakeid}
 							/>
 						)
 				})}
