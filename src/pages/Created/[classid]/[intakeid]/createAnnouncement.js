@@ -9,6 +9,7 @@ import { ExclamationCircleIcon } from "@heroicons/react/outline"
 import DatePicker from "react-datepicker"
 import { data } from "autoprefixer"
 import * as yup from "yup"
+import { create } from "yup/lib/Reference"
 // import RadioQuizType from "../../../../components/classid/createQuiz/RadioQuizType"
 
 let announcementSchema = yup.object().shape({
@@ -31,6 +32,49 @@ export default function CreateQuiz() {
 		in_intake_oID: "",
 	})
 	const [submitButtonActive, setSubmitButtonActive] = useState(false)
+
+	const createAnnouncement = async () => {
+		console.log("Ran createAnnouncement")
+		try {
+			let res = await fetch("/api/classCreatedData/createAnnouncement", {
+				method: "POST", // *GET, POST, PUT, DELETE, etc.
+				mode: "cors", // no-cors, *cors, same-origin
+				cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
+				credentials: "same-origin", // include, *same-origin, omit
+				headers: {
+					"Content-Type": "application/json",
+				},
+				redirect: "follow", // manual, *follow, error
+				referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+				body: JSON.stringify({
+					userid: session.user.id,
+					intakeid: intakeid,
+					announcementData: announcementData,
+				}), // body data type must match "Content-Type" header
+			})
+				.then((res) => res.json())
+				.catch((e) => console.log(e))
+			return res
+		} catch (e) {
+			console.log(e)
+		}
+	}
+	const handleSubmit = async () => {
+		return new Promise(async (resolve, reject) => {
+			let announcementCreation = await createAnnouncement()
+			if (announcementCreation.msg === "ok") {
+				resolve(announcementCreation)
+			} else {
+				reject()
+			}
+		})
+			.then((res) => {
+				console.log(res)
+				window.alert("Announcement successfully created!")
+				router.push(`/Created/${classid}`)
+			})
+			.catch((e) => window.alert("Failed to create announcement."))
+	}
 
 	const loadPage = async () => {
 		setAnnouncementData({ ...announcementData, in_intake_oID: intakeid })
@@ -162,6 +206,7 @@ export default function CreateQuiz() {
 				</div>
 				<div className='flex justify-end m-2'>
 					<button
+						onClick={handleSubmit}
 						disabled={submitButtonActive ? false : true}
 						className={`${
 							submitButtonActive

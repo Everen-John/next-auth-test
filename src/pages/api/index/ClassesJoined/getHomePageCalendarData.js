@@ -16,7 +16,7 @@ export default async function getHomePageData(req, res) {
 	var pipeline = [
 		{
 			$match: {
-				_id: new ObjectId("613daad6f1c942e1a2cada63"),
+				_id: new ObjectId(user),
 			},
 		},
 		{
@@ -127,7 +127,7 @@ export default async function getHomePageData(req, res) {
 					$push: {
 						class_name: "$intake_name",
 						announcement_title: "$announcement_title",
-						announcement_description: "announcement_description",
+						announcement_description: "$announcement_description",
 						bgcolor: "$bgcolor",
 						month: "$month",
 						intake_id: "$intakes_id",
