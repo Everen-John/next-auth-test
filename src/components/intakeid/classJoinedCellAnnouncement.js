@@ -2,7 +2,7 @@ import { loadGetInitialProps } from "next/dist/shared/lib/utils"
 import Head from "next/head"
 import Image from "next/image"
 import Link from "next/link"
-import { BookOpenIcon } from "@heroicons/react/outline"
+import { BookOpenIcon, ExclamationCircleIcon } from "@heroicons/react/outline"
 
 export default function ClassJoinedCellAnnouncement({ weekItem }) {
 	let deadline = new Date(weekItem.announcementDatas.announcement_deadline)
@@ -26,7 +26,7 @@ export default function ClassJoinedCellAnnouncement({ weekItem }) {
 			</div>
 			<div className='flex flex-row'>
 				<div className='p-1 w-28 min-w-1/8 max-w-1/8'>
-					<Image src='/076-megaphone.svg' width={28} height={28} />
+					<ExclamationCircleIcon className='h-70 w-7 ' />
 				</div>
 
 				<div className='p-1 break-words min-w-7/8 '>
