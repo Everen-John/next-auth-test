@@ -21,11 +21,8 @@ export default function FitbComponent({
 	console.log("answerPage", answerPage)
 
 	const writeAnswer = ({ e, key }) => {
-		console.log(e.target.value)
-		console.log(key)
 		let answerArrayTemp = JSON.parse(JSON.stringify(answerPage))
 		answerArrayTemp.answers[key] = e.target.value
-		console.log(answerArrayTemp)
 		answerRegisterer(index, answerArrayTemp)
 	}
 

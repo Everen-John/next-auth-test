@@ -6,6 +6,7 @@ import ClassJoinedCellAnnouncement from "./classJoinedCellAnnouncement"
 import ClassJoinedCellContent from "./classJoinedCellContent"
 import ClassJoinedCellFiles from "./classJoinedCellFiles"
 import ClassJoinedCellQuiz from "./classJoinedCellQuiz"
+import ClassJoinedCellSubmission from "./classJoinedCellSubmission"
 
 export default function ClassJoinedWeeklyBlock({ yearedData, setFolded }) {
 	let firstDayOfWeek = new Date(yearedData.firstDayOfWeek).toLocaleDateString(
@@ -30,6 +31,8 @@ export default function ClassJoinedWeeklyBlock({ yearedData, setFolded }) {
 						return <ClassJoinedCellQuiz weekItem={weekItem} key={key} />
 					else if (weekItem.type === "files")
 						return <ClassJoinedCellFiles weekItem={weekItem} key={key} />
+					else if (weekItem.type === "submission")
+						return <ClassJoinedCellSubmission weekItem={weekItem} key={key} />
 				})}
 			</div>
 		</div>

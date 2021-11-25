@@ -30,6 +30,7 @@ export default async function getHomePageData(req, res) {
 				intake_code: 1.0,
 				intake_name: 1.0,
 				date_created: 1.0,
+				submission_oIDs: 1.0,
 			},
 		},
 		{
@@ -169,6 +170,37 @@ export default async function getHomePageData(req, res) {
 						},
 					},
 				],
+				Submissions: [
+					{
+						$project: {
+							submission_oIDs: 1.0,
+						},
+					},
+					{
+						$unwind: {
+							path: "$submission_oIDs",
+						},
+					},
+					{
+						$lookup: {
+							from: "submissions",
+							localField: "submission_oIDs",
+							foreignField: "_id",
+							as: "submissionDatas",
+						},
+					},
+					{
+						$unwind: {
+							path: "$submissionDatas",
+						},
+					},
+					{
+						$addFields: {
+							type: "submission",
+							publish_time: "$submissionDatas.publish_time",
+						},
+					},
+				],
 			},
 		},
 		{
@@ -180,7 +212,13 @@ export default async function getHomePageData(req, res) {
 			$project: {
 				GeneralData: 1.0,
 				Items: {
-					$concatArrays: ["$Quizes", "$contents", "$Files", "$Announcements"],
+					$concatArrays: [
+						"$Quizes",
+						"$contents",
+						"$Files",
+						"$Announcements",
+						"$Submissions",
+					],
 				},
 			},
 		},
@@ -258,7 +296,9 @@ export default async function getHomePageData(req, res) {
 			},
 		},
 		{
-			$sort: { _id: 1 },
+			$sort: {
+				_id: 1,
+			},
 		},
 		{
 			$group: {

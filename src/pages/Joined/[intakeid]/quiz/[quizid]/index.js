@@ -227,8 +227,9 @@ export default function QuizId() {
 		return answerSheet
 	}
 
-	const generateOneQuestion = () => {
+	const generateOneQuestion = (questionIndex) => {
 		console.log("generateOneQuestion is called?")
+		console.log(questionData.question_type)
 		switch (questionData.question_type) {
 			case "FITB":
 				return (
@@ -331,7 +332,9 @@ export default function QuizId() {
 	}
 	const nextButtonHandler = () => {
 		console.log("nextButtonHandler called!")
+		setQuestionData(quizData.questions[questionIndex + 1])
 		setQuestionIndex(questionIndex + 1)
+
 		setNextButtonActive(false)
 	}
 
@@ -364,7 +367,7 @@ export default function QuizId() {
 		console.log("Answer Sheet has been Changed!", answerSheet)
 	}, [answerSheet])
 
-	useEffect(async () => {
+	useEffect(() => {
 		console.log("questionIndex", questionIndex)
 		if (quizData) {
 			console.log("quizData length", quizData.questions.length)
@@ -445,7 +448,7 @@ export default function QuizId() {
 								</div>
 							) : null}
 							{startQuiz === 2 && questionIndex <= quizData.questions.length - 1
-								? generateOneQuestion()
+								? generateOneQuestion(questionIndex)
 								: null}
 						</div>
 					</div>

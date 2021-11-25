@@ -37,7 +37,7 @@ export default function ClassJoinedCellFile({ weekItem }) {
 	return (
 		<div className='bg-gray-200 p-2 m-2 rounded-md' onClick={downloadFile}>
 			<div className='text-3xs'>
-				published on: {publishDate} {publishTime}
+				published for: {publishDate} {publishTime}
 			</div>
 			<div className='flex flex-row'>
 				<div className='p-1 w-28 min-w-1/8 max-w-1/8'>

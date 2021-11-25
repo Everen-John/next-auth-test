@@ -81,7 +81,20 @@ export default function Index() {
 					user: session.user.id,
 					intakeid: intakeId,
 				}), // body data type must match "Content-Type" header
-			}).then((res) => res.json())
+			})
+				.then((res) => {
+					return res.json()
+				})
+				.then((res) => {
+					console.log(res)
+					localStorage.setItem(
+						`intake_${res._id._id}_name`,
+						res._id.intake_name
+					)
+					console.log(`intake_${res._id._id}_name`, res._id.intake_name)
+					return res
+				})
+
 			setIntakeData(res)
 			setIntakeLoading(false)
 			console.log("res", res)

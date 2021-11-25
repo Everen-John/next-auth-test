@@ -6,6 +6,7 @@ import ClassCreatedCellAnnouncement from "./classCreatedCellAnnouncement"
 import ClassCreatedCellContent from "./classCreatedCellContent"
 import ClassCreatedCellFiles from "./classCreatedCellFiles"
 import ClassCreatedCellQuiz from "./classCreatedCellQuiz"
+import ClassCreatedCellSubmission from "./classCreatedCellSubmission"
 
 export default function ClassCreatedWeeklyBlock({
 	yearedData,
@@ -63,6 +64,16 @@ export default function ClassCreatedWeeklyBlock({
 								intakeid={intakeid}
 							/>
 						)
+					else if (weekItem.type === "submission") {
+						return (
+							<ClassCreatedCellSubmission
+								weekItem={weekItem}
+								key={key}
+								classid={classid}
+								intakeid={intakeid}
+							/>
+						)
+					}
 				})}
 			</div>
 		</div>

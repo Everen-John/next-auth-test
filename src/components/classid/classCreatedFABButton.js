@@ -10,6 +10,7 @@ import {
 	CloudUploadIcon,
 	AnnotationIcon,
 	ExclamationCircleIcon,
+	InboxInIcon,
 } from "@heroicons/react/outline"
 import { XyzTransitionGroup } from "@animxyz/react"
 
@@ -26,6 +27,10 @@ export default function ClassCreatedFABButton({ classid, intakeid }) {
 		setbtnAddActive(false)
 	}
 	const handleAddAnnouncement = () => {
+		setbtnAddActive(false)
+	}
+
+	const handleAddSubmission = () => {
 		setbtnAddActive(false)
 	}
 	return (
@@ -48,12 +53,47 @@ export default function ClassCreatedFABButton({ classid, intakeid }) {
 						}}
 					>
 						<Link
+							href={`/Created/${classid}/${intakeid}/createAnnouncement?intake_name=${encodeURIComponent(
+								localStorage.getItem(`intake_${intakeid}_name`)
+							)}`}
+						>
+							<button
+								onClick={handleAddAnnouncement}
+								className='px-3 ml-auto mr-0 mb-1 list-item text-white w-auto h-10 bg-green-600 rounded-full hover:bg-green-700 active:shadow-lg mouse shadow focus:outline-none'
+							>
+								<ExclamationCircleIcon className='max-h-10 w-6 mr-2 inline-block' />
+								<div className='inline-block'>Announcement</div>
+							</button>
+						</Link>
+						<Link
+							href={`/Created/${classid}/${intakeid}/createSubmission?intake_name=${encodeURIComponent(
+								localStorage.getItem(`intake_${intakeid}_name`)
+							)}`}
+						>
+							<button
+								onClick={handleAddSubmission}
+								className='px-3 ml-auto mr-0 mb-1 list-item text-white w-auto h-10 bg-green-600 rounded-full hover:bg-green-700 active:shadow-lg mouse shadow focus:outline-none'
+							>
+								<InboxInIcon className='max-h-10 w-6 mr-2 inline-block' />
+								<div className='inline-block'>Submission</div>
+							</button>
+						</Link>
+						<Link
+							href={`/Created/${classid}/${intakeid}/createDocument?intake_name=${encodeURIComponent(
+								localStorage.getItem(`intake_${intakeid}_name`)
+							)}`}
+						>
+							<button
+								onClick={handleAddContent}
+								className='px-3 ml-auto mr-0 mb-1 list-item text-white w-auto h-10 bg-green-600 rounded-full hover:bg-green-700 active:shadow-lg mouse shadow  focus:outline-none'
+							>
+								<AnnotationIcon className='max-h-10 w-6 mr-2 inline-block' />
+								<div className='inline-block'>Content</div>
+							</button>
+						</Link>
+						<Link
 							href={`/Created/${classid}/${intakeid}/createQuiz?intake_name=${encodeURIComponent(
-								JSON.parse(
-									localStorage.getItem(
-										`classId${classid}lastPickedAccordianMenu`
-									)
-								).intake_name
+								localStorage.getItem(`intake_${intakeid}_name`)
 							)}`}
 						>
 							<button
@@ -66,11 +106,7 @@ export default function ClassCreatedFABButton({ classid, intakeid }) {
 						</Link>
 						<Link
 							href={`/Created/${classid}/${intakeid}/uploadFile?intake_name=${encodeURIComponent(
-								JSON.parse(
-									localStorage.getItem(
-										`classId${classid}lastPickedAccordianMenu`
-									)
-								).intake_name
+								localStorage.getItem(`intake_${intakeid}_name`)
 							)}`}
 						>
 							<button
@@ -79,40 +115,6 @@ export default function ClassCreatedFABButton({ classid, intakeid }) {
 							>
 								<CloudUploadIcon className='max-h-10 w-5 mr-2 inline-block' />
 								<div className='inline-block'>File</div>
-							</button>
-						</Link>
-						<Link
-							href={`/Created/${classid}/${intakeid}/createDocument?intake_name=${encodeURIComponent(
-								JSON.parse(
-									localStorage.getItem(
-										`classId${classid}lastPickedAccordianMenu`
-									)
-								).intake_name
-							)}`}
-						>
-							<button
-								onClick={handleAddContent}
-								className='px-3 ml-auto mr-0 mb-1 list-item text-white w-auto h-10 bg-green-600 rounded-full hover:bg-green-700 active:shadow-lg mouse shadow  focus:outline-none'
-							>
-								<AnnotationIcon className='max-h-10 w-6 mr-2 inline-block' />
-								<div className='inline-block'>Content</div>
-							</button>
-						</Link>
-						<Link
-							href={`/Created/${classid}/${intakeid}/createAnnouncement?intake_name=${encodeURIComponent(
-								JSON.parse(
-									localStorage.getItem(
-										`classId${classid}lastPickedAccordianMenu`
-									)
-								).intake_name
-							)}`}
-						>
-							<button
-								onClick={handleAddAnnouncement}
-								className='px-3 ml-auto mr-0 mb-1 list-item text-white w-auto h-10 bg-green-600 rounded-full hover:bg-green-700 active:shadow-lg mouse shadow focus:outline-none'
-							>
-								<ExclamationCircleIcon className='max-h-10 w-6 mr-2 inline-block' />
-								<div className='inline-block'>Announcement</div>
 							</button>
 						</Link>
 					</div>
