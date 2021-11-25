@@ -423,7 +423,7 @@ export default function QuizId() {
 												questions in this quiz.
 											</div>
 											<div className='text-base'>
-												Click Start whenever you're ready.
+												Click Start whenever you&apos;re ready.
 											</div>
 										</div>
 

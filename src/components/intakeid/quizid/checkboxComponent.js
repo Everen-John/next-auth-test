@@ -81,7 +81,7 @@ export default function CheckboxComponent({
 					<div>Select the correct answers.</div>
 					{questionData.checkbox_values.map((item, key) => {
 						return (
-							<div className='my-1 flex flex-row'>
+							<div className='my-1 flex flex-row' key={key}>
 								<input
 									className='form-checkbox flex-shrink self-center mr-2 shadow-md'
 									type='checkbox'
