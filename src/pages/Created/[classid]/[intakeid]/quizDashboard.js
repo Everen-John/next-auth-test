@@ -113,7 +113,10 @@ export default function QuizDashboard() {
 							<tbody className='text-2xs'>
 								{quizData.attempters.map((item, key) => {
 									return (
-										<tr className={key % 2 === 0 ? "bg-gray-300" : null}>
+										<tr
+											key={key}
+											className={key % 2 === 0 ? "bg-gray-300" : null}
+										>
 											<td className='border border-solid border-gray-500 px-1'>
 												{item.attempter_name}
 											</td>

@@ -55,7 +55,7 @@ export default function RadioComponent({
 					<div>Pick the correct answer.</div>
 					{questionData.radio_values.map((item, key) => {
 						return (
-							<div className='my-1'>
+							<div className='my-1' key={key}>
 								<input
 									className='form-radio inline-block self-center mr-2'
 									type='radio'

@@ -55,7 +55,7 @@ export default function EssayComponent({
 					<div className='text-2xs'>Write your answer below:</div>
 					<div className='my-1'>
 						<textarea
-							class='form-textarea mt-1 w-full block max-w-full text-sm'
+							className='form-textarea mt-1 w-full block max-w-full text-sm'
 							rows='7'
 							placeholder='Enter some long form content.'
 							onChange={writeAnswer}

@@ -88,6 +88,7 @@ export default function CheckboxComponent({
 									name='checkboxAnswer'
 									value={key}
 									onClick={(e) => checkboxClickedHandler(key, e)}
+									key={key}
 								></input>
 								<div>
 									<p className=' flex-grow text-sm'>{item}</p>

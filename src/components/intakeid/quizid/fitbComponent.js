@@ -54,7 +54,7 @@ export default function FitbComponent({
 					<div>Fill in the blanks</div>
 					{answerPage.answers.map((item, key) => {
 						return (
-							<div className='my-1'>
+							<div className='my-1' key={key}>
 								<div className='text-2xs inline-block mr-2'>{key + 1}.</div>
 								<input
 									className='form-text inline-block mr-2 py-1 px-4 rounded-md border border-solid border-gray-300 shadow-md'
