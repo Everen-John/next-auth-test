@@ -65,35 +65,37 @@ export default function CalendarCell({
 								{/*body*/}
 								<div className='relative p-2 flex-auto'>
 									{announcementDatas ? (
-										announcementDatas.map((item) => (
-											<div
-												className={
-													" rounded-md my-4 text-blueGray-500 text-lg leading-relaxed p-2 " +
-													item.bgcolor
-												}
-												key={item.announcement_id}
-											>
-												<a href='404' target='_blank'>
-													<div className='flex flex-row'>
-														<div className='pl-2 text-xl flex-grow font-bold'>
-															{item.announcement_title}
+										announcementDatas.map((item, key) => (
+											<Link href={"/Joined/" + item.intake_id} key={key}>
+												<div
+													className={
+														" rounded-md my-4 text-blueGray-500 text-lg leading-relaxed p-2 " +
+														item.bgcolor
+													}
+													key={item.announcement_id}
+												>
+													<a href='404' target='_blank'>
+														<div className='flex flex-row'>
+															<div className='pl-2 text-xl flex-grow font-bold'>
+																{item.announcement_title}
+															</div>
+															<div className='pr-2 text-2xs self-center italic'>
+																{item.class_name}
+															</div>
 														</div>
-														<div className='pr-2 text-2xs self-center italic'>
-															{item.class_name}
-														</div>
-													</div>
 
-													<div className='pl-2 text-xs'>
-														{item.announcement_description}
-													</div>
-													<div className='pl-2 text-3xs'>
-														classes_id: {item.classes_id}
-													</div>
-													<div className='pl-2 text-3xs'>
-														announcement_id: {item.announcement_id}
-													</div>
-												</a>
-											</div>
+														<div className='pl-2 text-xs'>
+															{item.announcement_description}
+														</div>
+														<div className='pl-2 text-3xs'>
+															classes_id: {item.intake_id}
+														</div>
+														<div className='pl-2 text-3xs'>
+															announcement_id: {item.announcement_id}
+														</div>
+													</a>
+												</div>
+											</Link>
 										))
 									) : (
 										<p>No announcements here!</p>

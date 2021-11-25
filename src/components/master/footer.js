@@ -14,7 +14,12 @@ export default function Footer({ session }) {
 						rel='noreferrer'
 						href='https://www.linkedin.com/in/johntanhanseng/'
 					>
-						<Image src='/linked-in.svg' width={24} height={24} />
+						<Image
+							src='/linked-in.svg'
+							width={24}
+							height={24}
+							alt={"Linked-in Button"}
+						/>
 					</a>
 				</span>
 				<span className='pr-2'>
@@ -23,7 +28,12 @@ export default function Footer({ session }) {
 						rel='noreferrer'
 						href='https://www.facebook.com/BurningF1re'
 					>
-						<Image src='/facebook.svg' width={24} height={24} />
+						<Image
+							src='/facebook.svg'
+							width={24}
+							height={24}
+							alt={"Facebook Button"}
+						/>
 					</a>
 				</span>
 				<span className='pr-2'>
@@ -32,7 +42,12 @@ export default function Footer({ session }) {
 						rel='noreferrer'
 						href='https://github.com/Everen-John'
 					>
-						<Image src='/github.svg' width={24} height={24} />
+						<Image
+							src='/github.svg'
+							width={24}
+							height={24}
+							alt={"Github Button"}
+						/>
 					</a>
 				</span>
 			</footer>

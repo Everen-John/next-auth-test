@@ -1,8 +1,9 @@
-import clientPromise from "../../../lib/mongodb"
+import clientPromise from "../../../../lib/mongodb"
 import { ObjectId } from "bson"
 
 export default async function getHomePageData(req, res) {
 	let monthSelected = req.body.month
+	let yearSelected = req.body.year
 	let user = req.body.user
 
 	const client = await clientPromise
@@ -72,15 +73,28 @@ export default async function getHomePageData(req, res) {
 			},
 		},
 		{
+			$lookup: {
+				from: "class",
+				foreignField: "_id",
+				localField: "intakes_data.class_oID",
+				as: "class_data",
+			},
+		},
+		{
+			$unwind: {
+				path: "$class_data",
+			},
+		},
+		{
 			$addFields: {
-				intake_name: "$intakes_data.intake_name",
+				intake_name: "$class_data.class_name",
 				announcement_title: "$announcement_data.announcement_Title",
 				announcement_description: "$announcement_data.announcement_description",
 				bgcolor: "$announcement_data.bgcolor",
-				announcement_deadline: "$announcement_data.announcement_deadline",
+				publish_time: "$announcement_data.publish_time",
 				month: {
 					$month: {
-						date: "$announcement_data.announcement_deadline",
+						date: "$announcement_data.publish_time",
 					},
 				},
 			},
@@ -92,29 +106,31 @@ export default async function getHomePageData(req, res) {
 				announcement_id: "$announcements",
 				announcement_title: 1.0,
 				announcement_description: 1.0,
-				announcement_deadline: 1.0,
+				publish_time: 1.0,
 				bgcolor: 1.0,
 				month: 1.0,
+				year: { $year: "$publish_time" },
 			},
 		},
 		{
 			$match: {
 				month: monthSelected,
+				year: yearSelected,
 			},
 		},
 		{
 			$group: {
 				_id: {
-					$dayOfMonth: "$announcement_deadline",
+					$dayOfMonth: "$publish_time",
 				},
 				announcements: {
 					$push: {
-						intake_name: "$intake_name",
+						class_name: "$intake_name",
 						announcement_title: "$announcement_title",
-						announcement_description: "announcement_description",
+						announcement_description: "$announcement_description",
 						bgcolor: "$bgcolor",
 						month: "$month",
-						intakes_id: "$intakes_id",
+						intake_id: "$intakes_id",
 						announcement_id: "$announcement_id",
 					},
 				},
