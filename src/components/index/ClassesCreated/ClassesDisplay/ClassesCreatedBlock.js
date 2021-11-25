@@ -11,7 +11,7 @@ export default function ClassesJoinedBlock({
 	return (
 		<div className='bg-green-600 mb-2'>
 			<h2 className='text-base pt-2 pl-2 text-white'>
-				Classes You{"'"}ve Created
+				Classes You&apos;ve Created
 			</h2>
 
 			<div className='overflow-x-auto whitespace-nowrap'>
