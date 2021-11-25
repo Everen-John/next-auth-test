@@ -9,7 +9,7 @@ import ClassJoinedYearlyBlock from "./classJoinedYearlyBlock"
 
 export default function ClassJoinedContentBlock({ intakeJoined }) {
 	return (
-		<div className='bg-gray-700 p-1'>
+		<div className='bg-gray-800 p-1'>
 			<div className='p-2 mb-4 mt-1 shadow-md bg-gray-900 rounded-lg flex flex-row'>
 				<BookOpenIcon className='h-8 w-8 inline self-center text-green-400 mr-2 drop-shadow-md flex-grow-0 min-w-8' />
 				<h1 className='text-2xl text-green-400 inline truncate'>

@@ -23,35 +23,43 @@ export default function ClassJoinedCellSubmission({ weekItem }) {
 	})
 
 	return (
-		<div className='bg-gray-200 p-2 m-2 rounded-md'>
-			<div className='text-4xs px-2 rounded-md'>
-				<div className='inline-block'>
-					{publishDate} {publishTime}
-				</div>{" "}
-				-{" "}
-				<div className='inline-block'>
-					{deadlineDate} {deadlineTime}
+		<Link
+			href={`./${weekItem.submissionDatas.in_intake_oID}/submission/${
+				weekItem.submissionDatas._id
+			}?intake_name=${localStorage.getItem(
+				`${weekItem.submissionDatas.in_intake_oID}name`
+			)}`}
+		>
+			<div className='bg-gray-200 p-2 m-2 rounded-md'>
+				<div className='text-4xs px-2 rounded-md'>
+					<div className='inline-block'>
+						{publishDate} {publishTime}
+					</div>{" "}
+					-{" "}
+					<div className='inline-block'>
+						{deadlineDate} {deadlineTime}
+					</div>
+				</div>
+
+				<div className='flex flex-row'>
+					<div className='p-1 w-28 min-w-1/8 max-w-1/8'>
+						{/* <Image src='/053-file.svg' width={28} height={28} /> */}
+						<InboxInIcon className='h-7 w-7' />
+					</div>
+
+					<div className='p-1 break-words min-w-7/8 '>
+						<div className={"text-xs font-medium rounded-md "}>
+							{weekItem.submissionDatas.submission_Title}
+						</div>
+						<div className='text-2xs'>
+							{/* Deadline: {deadlineDate} {deadlineTime} */}
+						</div>
+						<p className='text-xs'>
+							{weekItem.submissionDatas.submission_description}{" "}
+						</p>
+					</div>
 				</div>
 			</div>
-
-			<div className='flex flex-row'>
-				<div className='p-1 w-28 min-w-1/8 max-w-1/8'>
-					{/* <Image src='/053-file.svg' width={28} height={28} /> */}
-					<InboxInIcon className='h-7 w-7' />
-				</div>
-
-				<div className='p-1 break-words min-w-7/8 '>
-					<div className={"text-xs font-medium rounded-md "}>
-						{weekItem.submissionDatas.submission_Title}
-					</div>
-					<div className='text-2xs'>
-						{/* Deadline: {deadlineDate} {deadlineTime} */}
-					</div>
-					<p className='text-xs'>
-						{weekItem.submissionDatas.submission_description}{" "}
-					</p>
-				</div>
-			</div>
-		</div>
+		</Link>
 	)
 }

@@ -50,12 +50,15 @@ export default function Intakeid() {
 
 	return (
 		<Layout session={session}>
-			<div className='bg-green-500'>
-				<p>ClassId: {intakeid}</p>
-
+			<div className=''>
 				{loading ? (
-					<div className='bg-indigo-400 flex justify-center p-14'>
-						<Image src='/Loaders/oval.svg' width={150} height={150} />
+					<div className='flex justify-center m-10'>
+						<Image
+							src='/Loaders/tail-spin.svg'
+							width={100}
+							height={100}
+							alt='spinner'
+						/>
 					</div>
 				) : (
 					<ClassJoinedContentBlock intakeJoined={intakeJoined} />
