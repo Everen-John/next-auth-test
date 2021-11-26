@@ -31,7 +31,7 @@ export default function ClassJoinedCellSubmission({ weekItem }) {
 			)}`}
 		>
 			<div className='bg-gray-200 p-2 m-2 rounded-md'>
-				<div className='text-4xs px-2 rounded-md'>
+				<div className='text-3xs px-2 rounded-md'>
 					<div className='inline-block'>
 						{publishDate} {publishTime}
 					</div>{" "}
@@ -51,9 +51,7 @@ export default function ClassJoinedCellSubmission({ weekItem }) {
 						<div className={"text-xs font-medium rounded-md "}>
 							{weekItem.submissionDatas.submission_Title}
 						</div>
-						<div className='text-2xs'>
-							{/* Deadline: {deadlineDate} {deadlineTime} */}
-						</div>
+						<div className='text-2xs'></div>
 						<p className='text-xs'>
 							{weekItem.submissionDatas.submission_description}{" "}
 						</p>

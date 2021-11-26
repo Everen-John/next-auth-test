@@ -20,6 +20,7 @@ let submission_Schema = yup.object().shape({
 	in_intake_oID: yup.string().required(),
 	fileFormats: yup.array().min(1).required(),
 	maxFileSize: yup.number().required(),
+	namingConvention: yup.array().min(3).required(),
 })
 
 let formatTypes = [".jpg", ".jpeg", ".png", ".docx", ".doc", ".pdf"]
@@ -36,6 +37,7 @@ export default function CreateQuiz() {
 		deadline: new Date(),
 		fileFormats: [],
 		maxFileSize: 1048576 * 24,
+		namingConvention: ["__NAME__", "", "", "", "__DATE__"],
 	})
 	const [submitButtonActive, setSubmitButtonActive] = useState(false)
 
@@ -84,6 +86,40 @@ export default function CreateQuiz() {
 
 	const loadPage = async () => {
 		setSubmissionData({ ...submissionData, in_intake_oID: intakeid })
+	}
+
+	const namingConventionConcatenator = () => {
+		let namingConventionTemp = JSON.parse(
+			JSON.stringify(submissionData.namingConvention)
+		)
+		for (let i = 0; i <= namingConventionTemp.length; i++) {
+			switch (namingConventionTemp[i]) {
+				case "__NAME__":
+					namingConventionTemp[i] = session.user.name
+					break
+				case "__DATE__":
+					namingConventionTemp[i] =
+						new Date().toLocaleDateString("en-GB") +
+						" " +
+						new Date().toLocaleTimeString("en-GB")
+					break
+				default:
+					break
+			}
+		}
+		console.log("name", namingConventionTemp.join(" "))
+		return namingConventionTemp.join(" ")
+	}
+
+	const namingConventionChangeHandler = (e, key) => {
+		let namingConventionTemp = JSON.parse(
+			JSON.stringify(submissionData.namingConvention)
+		)
+		namingConventionTemp[key] = e.target.value
+		setSubmissionData({
+			...submissionData,
+			namingConvention: namingConventionTemp,
+		})
 	}
 
 	useEffect(async () => {
@@ -239,8 +275,59 @@ export default function CreateQuiz() {
 							})}
 						</div>
 					</div>
+					<div className='mb-3 text-xs  '>
+						<div className='text-white'>Naming convention</div>
+						{submissionData.namingConvention.map((item, key) => {
+							return (
+								<input
+									className='rounded-sm mb-1 px-3'
+									type='text'
+									value={item}
+									key={key}
+									onChange={(e) => {
+										namingConventionChangeHandler(e, key)
+									}}
+								/>
+							)
+						})}
+						{status === "authenticated" ? (
+							<div className='mt-2 text-white'>
+								Name Preview: <div>{namingConventionConcatenator()}</div>
+							</div>
+						) : null}
+					</div>
+					<div className='mb-3 text-xs  '>
+						<div className='text-white'>Maximum number of files</div>
+						<select
+							className={`appearance-none text-black px-3 min-w-1/4 text-left text-base border-2 border-solid border-green-900 rounded-md `}
+							name='maxNumberOfFiles'
+							value={submissionData.maxNumberOfFiles}
+							onChange={(e) => {
+								setSubmissionData({
+									...submissionData,
+									maxNumberOfFiles: e.target.value,
+								})
+							}}
+						>
+							<option className='' value={1}>
+								1
+							</option>
+							<option className='' value={2}>
+								2
+							</option>
+							<option className='' value={3}>
+								3
+							</option>
+							<option className='' value={4}>
+								4
+							</option>
+							<option className='' value={5}>
+								5
+							</option>
+						</select>
+					</div>
 					<div className=' mb-5 h-10 w-full text-xs z-9999'>
-						<div className='text-white'>Max File Size</div>
+						<div className='text-white'>Max file size</div>
 						<input
 							type='text'
 							value={submissionData.maxFileSize}

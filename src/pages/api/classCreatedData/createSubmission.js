@@ -42,6 +42,8 @@ export default async function createQuiz(req, res) {
 					deadline: new Date(submissionData.deadline),
 					fileFormats: submissionData.fileFormats,
 					maxFileSize: submissionData.maxFileSize,
+					maxNumberOfFiles: parseInt(submissionData.maxNumberOfFiles),
+					namingConvention: submissionData.namingConvention,
 				},
 				{ session }
 			)
