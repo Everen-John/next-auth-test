@@ -37,6 +37,7 @@ export default function CreateQuiz() {
 		deadline: new Date(),
 		fileFormats: [],
 		maxFileSize: 1048576 * 24,
+		maxNumberOfFiles: 1,
 		namingConvention: ["__NAME__", "", "", "", "__DATE__"],
 	})
 	const [submitButtonActive, setSubmitButtonActive] = useState(false)
@@ -103,6 +104,7 @@ export default function CreateQuiz() {
 						" " +
 						new Date().toLocaleTimeString("en-GB")
 					break
+
 				default:
 					break
 			}
@@ -112,14 +114,24 @@ export default function CreateQuiz() {
 	}
 
 	const namingConventionChangeHandler = (e, key) => {
-		let namingConventionTemp = JSON.parse(
-			JSON.stringify(submissionData.namingConvention)
-		)
-		namingConventionTemp[key] = e.target.value
-		setSubmissionData({
-			...submissionData,
-			namingConvention: namingConventionTemp,
-		})
+		// let namingConventionTemp = JSON.parse(
+		// 	JSON.stringify(submissionData.namingConvention)
+		// )
+		// namingConventionTemp[key] = e.target.value
+		// setSubmissionData({
+		// 	...submissionData,
+		// 	namingConvention: namingConventionTemp,
+		// })
+		if (e.target.value.match(/^[\w&.\-]+$/) != null || e.target.value === "") {
+			let namingConventionTemp = JSON.parse(
+				JSON.stringify(submissionData.namingConvention)
+			)
+			namingConventionTemp[key] = e.target.value
+			setSubmissionData({
+				...submissionData,
+				namingConvention: namingConventionTemp,
+			})
+		}
 	}
 
 	useEffect(async () => {
@@ -297,7 +309,7 @@ export default function CreateQuiz() {
 						) : null}
 					</div>
 					<div className='mb-3 text-xs  '>
-						<div className='text-white'>Maximum number of files</div>
+						<div className='text-white'>Maximum number of files (WIP)</div>
 						<select
 							className={`appearance-none text-black px-3 min-w-1/4 text-left text-base border-2 border-solid border-green-900 rounded-md `}
 							name='maxNumberOfFiles'
@@ -308,6 +320,7 @@ export default function CreateQuiz() {
 									maxNumberOfFiles: e.target.value,
 								})
 							}}
+							disabled
 						>
 							<option className='' value={1}>
 								1

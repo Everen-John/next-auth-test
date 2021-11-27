@@ -26,25 +26,53 @@ export default async function submitFile(req, res) {
 				reject(err)
 				return
 			}
-			console.log(fields, files)
+
 			resolve({ fields, files })
 		})
-	}).then((fileData) => {
-		console.log(fileData)
-		return fileData
 	})
-	// .then((fileData) => uploadToS3(fileData))
-	// .then((S3Results) => {
-	// 	console.log("At S3 Results")
-	// 	console.log(S3Results)
-	// 	console.log("Fields", S3Results.fields)
-	// 	uploadFileDataToMongoDB(S3Results)
-	// })
+		.then((fileData) => {
+			return fileData
+		})
+		.then((fileData) => {
+			let fileName = designName(fileData)
+			return { fileData, fileName }
+		})
+		.then(({ fileData, fileName }) => uploadToS3(fileData, fileName))
+		.then((S3Results) => {
+			console.log("At S3 Results")
+			console.log(S3Results)
+			console.log("Fields", S3Results.fields)
+			uploadFileDataToMongoDB(S3Results)
+		})
+		.catch((e) => {
+			res.status()
+		})
 
 	res.status(200).send()
 }
 
-const uploadToS3 = async (fileData) => {
+const designName = (fileData) => {
+	let namingConvention = JSON.parse(fileData.fields.namingConvention)
+
+	for (let i = 0; i < namingConvention.length; i++) {
+		switch (namingConvention[i]) {
+			case "__NAME__":
+				namingConvention[i] = fileData.fields.user_name
+				break
+			case "__DATE__":
+				namingConvention[i] = new Date()
+					.toISOString()
+					.replace(/T/, " ") // replace T with a space
+					.replace(/\..+/, "")
+				break
+			default:
+				break
+		}
+	}
+	return namingConvention.join(" ")
+}
+
+const uploadToS3 = async (fileData, fileName) => {
 	let s3 = new aws.S3({
 		accessKeyId: process.env.ACCESS_KEY,
 		secretAccessKey: process.env.SECRET_KEY,
@@ -55,15 +83,12 @@ const uploadToS3 = async (fileData) => {
 		let dateOfNow = new Date().toLocaleString("en-GB")
 		const fileStream = fs.createReadStream(`${fileData.files.media.path}`)
 		const S3Params = {
-			Bucket: `${process.env.BUCKET_NAME}/public/${fileData.fields.in_intake_oID}/submissionBank/`,
+			Bucket: `${process.env.BUCKET_NAME}/public/${fileData.fields.intake_oID}/submissionBank/${fileData.fields.submission_oID}/${fileData.fields.user_oID}`,
 			Body: fileStream,
-			Key: `${path.parse(fileData.files.media.name).name}_${dateOfNow.replace(
-				/[^\w\s]/gi,
-				""
-			)}${path.extname(fileData.files.media.name)}`,
+			Key: `${fileName}${path.extname(fileData.files.media.name)}`,
 		}
 		var results = await s3.upload(S3Params).promise()
-		resolve({ fields: fileData.fields, results })
+		resolve({ fields: fileData.fields, results, fileName })
 	})
 }
 
@@ -85,40 +110,36 @@ const uploadFileDataToMongoDB = async (S3Results) => {
 		await session.withTransaction(async () => {
 			const intakeColl = client
 				.db(process.env.DATABASE_NAME)
-				.collection("intakes")
-			const filesColl = client.db(process.env.DATABASE_NAME).collection("files")
+				.collection(process.env.submissions_coll)
+			const submissionsColl = client
+				.db(process.env.DATABASE_NAME)
+				.collection(process.env.submissions_coll)
 
 			//PREPROCESSING THE TIME DATA
 			console.log("S3 RESULTS FIELDS: ", S3Results.fields)
-			let published_time_arr = S3Results.fields.publish_time.split("/")
-			let published_time_new = `${published_time_arr[1]}-${published_time_arr[0]}-${published_time_arr[2]}`
 
 			// Important:: You must pass the session to the operations
-			let files_data = await filesColl.insertOne(
+			let submissions_data = await submissionsColl.updateOne(
+				{ _id: ObjectId(S3Results.fields.submission_oID) },
 				{
-					in_intake_oID: new ObjectId(S3Results.fields.in_intake_oID),
-					file_location: S3Results.results.Location,
-					publish_time: new Date(published_time_new),
-					file_deadline: new Date(S3Results.fields.file_deadline),
-					file_title: S3Results.fields.title,
-					file_description: S3Results.fields.description,
-					real_name: S3Results.fields.name,
-					type: S3Results.fields.type,
+					$push: {
+						submitters: {
+							submitter_oID: ObjectId(S3Results.fields.user_oID),
+							submittedLocation: S3Results.results.Location,
+							key: S3Results.results.key,
+							ETag: S3Results.results.ETag,
+						},
+					},
 				},
+
 				{ session }
 			)
-			console.log("FilesData: ", files_data.insertedId)
-			let intakeData = await intakeColl.updateOne(
-				{ _id: new ObjectId(S3Results.fields.in_intake_oID) },
-				{ $push: { files_oIDs: new ObjectId(files_data.insertedId) } },
-				{ session }
-			)
-			console.log(intakeData)
+			console.log("SUBMISSIONDATA:", submissions_data)
 		}, transactionOptions)
+		return
 	} catch (e) {
 		console.log(e)
 	} finally {
 		await session.endSession()
-		resolve()
 	}
 }
