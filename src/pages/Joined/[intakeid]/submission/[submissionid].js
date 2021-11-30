@@ -7,6 +7,15 @@ import Image from "next/image"
 import * as yup from "yup"
 import dynamic from "next/dynamic"
 import Layout from "../../../../components/master/layout"
+import Icon from "@mdi/react"
+import {
+	mdiFilePdfBox,
+	mdiFileJpgBox,
+	mdiFileDocumentBox,
+	mdiFilePngBox,
+	mdiFile,
+	mdiDelete,
+} from "@mdi/js"
 
 import Uppy from "@uppy/core"
 import XHRUpload from "@uppy/xhr-upload"
@@ -52,11 +61,6 @@ const useUppyFunc = () => {
 		console.log(file.name, preview)
 	})
 
-	uppy.on("complete", (result) => {
-		// const url = result.successful[0].uploadURL
-		console.log("successful upload", result)
-	})
-
 	uppy.on("error", (error) => {
 		console.error(error.stack)
 	})
@@ -70,6 +74,7 @@ export default function SubmissionId() {
 	const { intakeid, submissionid, intake_name } = router.query
 	const [loading, setLoading] = useState(true)
 	const [submissionData, setSubmissionData] = useState()
+	const [existingSubmittedFiles, setExistingSubmittedFiles] = useState()
 	const [formData, setFormData] = useState()
 	const [fileForForm, setFileForForm] = useState()
 	const [uploadButtonActive, setUploadButtonActive] = useState(false)
@@ -81,10 +86,15 @@ export default function SubmissionId() {
 			let submissionData = await getSubmissionData()
 			resolve(submissionData)
 		})
-			.then((submissionData) => {
-				console.log("submissionData", submissionData)
-				initializeUppy(submissionData)
+			.then(async (submissionData) => {
+				let existingSubmittedFilesData = await getExistingSubmittedFiles()
+				return { existingSubmittedFilesData, submissionData }
+			})
+			.then(({ existingSubmittedFilesData, submissionData }) => {
+				initializeUppy(submissionData, existingSubmittedFilesData.length)
+				setExistingSubmittedFiles(existingSubmittedFilesData)
 				setSubmissionData(submissionData)
+
 				return submissionData
 			})
 			.then((submissionData) => {
@@ -99,6 +109,37 @@ export default function SubmissionId() {
 			.then(() => {
 				setLoading(false)
 			})
+	}
+
+	const getExistingSubmittedFiles = async () => {
+		if (status === "authenticated") {
+			try {
+				let res = await fetch(
+					"/api/classJoinedData/getExistingSubmittedFiles",
+					{
+						method: "POST", // *GET, POST, PUT, DELETE, etc.
+						mode: "cors", // no-cors, *cors, same-origin
+						cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
+						credentials: "same-origin", // include, *same-origin, omit
+						headers: {
+							"Content-Type": "application/json",
+						},
+						redirect: "follow", // manual, *follow, error
+						referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+						body: JSON.stringify({
+							userid: session.user.id,
+							submissionid: submissionid,
+							intakeid: intakeid,
+						}), // body data type must match "Content-Type" header
+					}
+				)
+					.then((res) => res.json())
+					.catch((e) => console.log(e))
+				return res
+			} catch (e) {
+				console.log(e)
+			}
+		}
 	}
 	const getSubmissionData = async () => {
 		console.log("Ran getSubmission")
@@ -128,17 +169,83 @@ export default function SubmissionId() {
 			}
 		}
 	}
+	const deleteFileHandler = async (fileData) => {
+		return new Promise(async (resolve, reject) => {
+			let deleteSuccess = await deleteSubmittedFile(fileData)
+			if (deleteSuccess.msg === "ok") {
+				resolve()
+			} else {
+				reject()
+			}
+		})
+			.then(async () => {
+				let existingSubmittedFilesData = await getExistingSubmittedFiles()
+				return existingSubmittedFilesData
+			})
+			.then((existingSubmittedFilesData) => {
+				setExistingSubmittedFiles(existingSubmittedFilesData)
+			})
+	}
+	const uploadFileHandler = async (fileData) => {
+		return new Promise(async (resolve, reject) => {
+			let existingSubmittedFilesData = await getExistingSubmittedFiles()
+			resolve(existingSubmittedFilesData)
+		})
+			.then((existingSubmittedFiles) => {
+				setExistingSubmittedFiles(existingSubmittedFiles)
+			})
+			.catch((err) => {
+				console.log(err)
+			})
+	}
 
-	const initializeUppy = (submissionData) => {
+	const deleteSubmittedFile = async (fileData) => {
+		if (status === "authenticated") {
+			try {
+				let res = await fetch("/api/classJoinedData/deleteSubmittedFile", {
+					method: "POST", // *GET, POST, PUT, DELETE, etc.
+					mode: "cors", // no-cors, *cors, same-origin
+					cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
+					credentials: "same-origin", // include, *same-origin, omit
+					headers: {
+						"Content-Type": "application/json",
+					},
+					redirect: "follow", // manual, *follow, error
+					referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+					body: JSON.stringify({
+						userid: session.user.id,
+						fileData: fileData.submitters,
+						submissionid: submissionid,
+						intakeid: intakeid,
+					}), // body data type must match "Content-Type" header
+				})
+					.then((res) => res.json())
+					.catch((e) => console.log(e))
+				return res
+			} catch (e) {
+				console.log(e)
+			}
+		}
+	}
+
+	const initializeUppy = (submissionData, numberOfAlreadySubmittedFiles) => {
 		console.log(submissionData)
+		console.log("numberOfAlreadySubmittedFiles", numberOfAlreadySubmittedFiles)
 		uppy.setOptions({
 			restrictions: {
 				maxNumberOfFiles:
 					"maxNumberOfFiles" in submissionData
-						? submissionData.maxNumberOfFiles
+						? submissionData.maxNumberOfFiles -
+						  numberOfAlreadySubmittedFiles.length
 						: 1,
 				maxFileSize: submissionData.maxFileSize,
 				allowedFileTypes: submissionData.fileFormats,
+				disabled:
+					submissionData.maxNumberOfFiles -
+						numberOfAlreadySubmittedFiles.length ===
+					0
+						? true
+						: false,
 			},
 		})
 
@@ -150,6 +257,12 @@ export default function SubmissionId() {
 			multipleResults: false,
 			submitOnSuccess: false,
 			triggerUploadOnSubmit: false,
+		})
+
+		uppy.on("complete", (result) => {
+			// const url = result.successful[0].uploadURL
+			console.log("successful upload", result)
+			uploadFileHandler()
 		})
 
 		uppy.on("file-added", (file) => {
@@ -235,6 +348,65 @@ export default function SubmissionId() {
 										{submissionData.submission_Title}
 									</div>
 								</div>
+
+								<div className='bg-gray-100 p-2 m-2 text-black'>
+									<h1 className='text-xl font-bold text-center'>
+										Your submitted Files
+									</h1>
+									<div>
+										{existingSubmittedFiles.length > 0 ? (
+											existingSubmittedFiles.map((item, key) => {
+												return (
+													<div className='flex justify-center flex-row'>
+														<a
+															href={item.submitters.submittedLocation}
+															className='inline-block'
+															key={key}
+															download={true}
+														>
+															<div
+																key={key}
+																className='bg-white mx-1 my-1 p-2 border border-solid border-gray-300 rounded-md'
+															>
+																<Icon
+																	path={mdiFile}
+																	title='User Profile'
+																	size={1}
+																	className='inline-block text-green-500'
+																/>
+
+																{decodeURIComponent(
+																	item.submitters.submittedLocation.replace(
+																		/(.*)\//g,
+																		" "
+																	)
+																)}
+															</div>
+														</a>
+														<div className='inline-block self-center'>
+															<button
+																onClick={() => {
+																	deleteFileHandler(item)
+																}}
+															>
+																<Icon
+																	path={mdiDelete}
+																	title='User Profile'
+																	size={1}
+																	className='inline-block text-red-500'
+																/>
+															</button>
+														</div>
+													</div>
+												)
+											})
+										) : (
+											<div className='flex justify-center text-gray-500'>
+												You have not submitted any files yet!
+											</div>
+										)}
+									</div>
+								</div>
 								<div className='bg-gray-100 p-2 m-2 text-black'>
 									<div>{submissionData.submission_description}</div>
 									<div>submission begins: {submissionData.publish_time}</div>
@@ -276,6 +448,7 @@ export default function SubmissionId() {
 										value={JSON.stringify(submissionData.namingConvention)}
 										hidden
 									/>
+									<input name='username' value={session.user.username} hidden />
 									<input name='user_name' value={session.user.name} hidden />
 
 									<div className='flex justify-center min-w-full min-h-full '>
@@ -299,7 +472,10 @@ export default function SubmissionId() {
 												!(
 													new Date() > new Date(submissionData.publish_time) &&
 													new Date() < new Date(submissionData.deadline)
-												)
+												) ||
+												submissionData.maxNumberOfFiles -
+													existingSubmittedFiles.length <=
+													0
 											}
 										/>
 									</div>

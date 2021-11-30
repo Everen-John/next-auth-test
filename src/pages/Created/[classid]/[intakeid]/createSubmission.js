@@ -175,15 +175,15 @@ export default function CreateQuiz() {
 				</div>
 				<div className='bg-green-700 m-2 px-3 py-3 rounded-md'>
 					<div className='mb-3 text-xs  '>
-						<div className='text-white'>Announcement Title</div>
+						<div className='text-white'>Submission Title</div>
 						<input
 							className='h-10 w-full border rounded-lg p-1'
 							type='text'
 							required={true}
-							placeholder='Give the Announcement a Title...'
+							placeholder='Give the Submission a Title...'
 							name='title'
 							maxLength={40}
-							value={submissionData.announcement_Title}
+							value={submissionData.submission_Title}
 							onChange={(e) => {
 								setSubmissionData({
 									...submissionData,
@@ -198,10 +198,10 @@ export default function CreateQuiz() {
 							className='w-full text-xs border rounded-lg p-1'
 							type='textarea'
 							required={true}
-							placeholder='Give the Announcement a description...'
+							placeholder='Give the Submission a description...'
 							name='description'
 							maxLength={200}
-							value={submissionData.announcement_description}
+							value={submissionData.submission_description}
 							onChange={(e) => {
 								setSubmissionData({
 									...submissionData,

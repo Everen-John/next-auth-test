@@ -125,6 +125,7 @@ const uploadFileDataToMongoDB = async (S3Results) => {
 					$push: {
 						submitters: {
 							submitter_oID: ObjectId(S3Results.fields.user_oID),
+							submitter_name: S3Results.fields.user_name,
 							submittedLocation: S3Results.results.Location,
 							key: S3Results.results.key,
 							ETag: S3Results.results.ETag,
