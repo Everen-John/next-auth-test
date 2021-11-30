@@ -32,6 +32,7 @@
     "next": "11.1.2",
     "next-auth": "4.0.0-beta.2",
     "next-connect": "^0.11.0",
+    "next-pwa": "^5.4.1",
     "npm": "^8.0.0",
     "quill-blot-formatter": "^1.0.5",
     "quill-blot-formatter-mobile": "^1.1.1",

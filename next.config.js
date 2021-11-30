@@ -1,4 +1,11 @@
-module.exports = {
+const withPWA = require("next-pwa")
+
+module.exports = withPWA({
+	pwa: {
+		dest: "public",
+		register: true,
+		skipWaiting: true,
+	},
 	reactStrictMode: true,
 	webpack: (config) => {
 		config.experiments = { topLevelAwait: true }
@@ -7,12 +14,4 @@ module.exports = {
 	images: {
 		domains: ["via.placeholder.com", "lh3.googleusercontent.com"],
 	},
-	// async rewrites() {
-	// 	return [
-	// 		{
-	// 			source: "/:path*",
-	// 			destination: "https://s3.ap-southeast-1.amazonaws.com/next-eren",
-	// 		},
-	// 	]
-	// },
-}
+})
