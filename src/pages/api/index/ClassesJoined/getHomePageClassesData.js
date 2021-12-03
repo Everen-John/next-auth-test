@@ -15,7 +15,7 @@ export default async function getHomePageData(req, res) {
 	var pipeline = [
 		{
 			$match: {
-				_id: new ObjectId(user),
+				_id: new ObjectId("613daad6f1c942e1a2cada63"),
 			},
 		},
 		{
@@ -25,26 +25,39 @@ export default async function getHomePageData(req, res) {
 		},
 		{
 			$lookup: {
-				from: "class",
+				from: "intakes",
 				localField: "intakes_joined",
-				foreignField: "intake_oIDs",
-				as: "class_data",
-			},
-		},
-		{
-			$unwind: {
-				path: "$class_data",
+				foreignField: "_id",
+				as: "intake_data",
 			},
 		},
 		{
 			$project: {
-				class_name: "$class_data.class_name",
-				intake_id: "$intakes_joined",
-				class_icon: "$class_data.icon",
+				_id: 0,
+				intake: {
+					$first: "$intake_data",
+				},
 			},
 		},
 		{
-			$sort: { class_name: 1 },
+			$lookup: {
+				from: "class",
+				localField: "intake.class_oID",
+				foreignField: "_id",
+				as: "class_data",
+			},
+		},
+		{
+			$project: {
+				class_name: {
+					$first: "$class_data.class_name",
+				},
+				intake_id: "$intake._id",
+				class_icon: {
+					$first: "$class_data.icon",
+				},
+				intake_name: "$intake.intake_name",
+			},
 		},
 	]
 

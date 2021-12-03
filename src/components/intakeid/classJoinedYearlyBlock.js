@@ -11,8 +11,17 @@ import ClassJoinedWeeklyBlock from "./classJoinedWeeklyBlock"
 export default function ClassJoinedYearlyBlock({ yearlyItem }) {
 	let today = new Date()
 	let itemYearBeginning = new Date(yearlyItem.year, 0, 1)
-	let itemYearEnding = new Date(yearlyItem.year, 11, 1)
+	let itemYearEnding = new Date(yearlyItem.year, 11, 31)
 
+	console.log(
+		"today",
+		today,
+		"itemYearBeginning",
+		itemYearBeginning,
+		"itemYearEnding",
+		itemYearEnding,
+		!(today >= itemYearBeginning && today <= itemYearEnding)
+	)
 	const [folded, setFolded] = useState(
 		!(today >= itemYearBeginning && today <= itemYearEnding)
 	)

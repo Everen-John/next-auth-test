@@ -337,5 +337,6 @@ export default async function getHomePageData(req, res) {
 
 	var cursor = await collection.aggregate(pipeline, options)
 	var finalData = await cursor.toArray()
+	console.log(finalData)
 	res.status(200).json(finalData[0])
 }

@@ -5,6 +5,7 @@ export default async function getHomePageData(req, res) {
 	let monthSelected = req.body.month
 	let yearSelected = req.body.year
 	let user = req.body.user
+	console.log(monthSelected, yearSelected, user)
 
 	const client = await clientPromise
 
@@ -87,7 +88,7 @@ export default async function getHomePageData(req, res) {
 		},
 		{
 			$addFields: {
-				intake_name: "$class_data.class_name",
+				intake_name: "$intakes_data.intake_name",
 				announcement_title: "$announcement_data.announcement_Title",
 				announcement_description: "$announcement_data.announcement_description",
 				bgcolor: "$announcement_data.bgcolor",
@@ -109,7 +110,9 @@ export default async function getHomePageData(req, res) {
 				publish_time: 1.0,
 				bgcolor: 1.0,
 				month: 1.0,
-				year: { $year: "$publish_time" },
+				year: {
+					$year: "$publish_time",
+				},
 			},
 		},
 		{
@@ -125,7 +128,7 @@ export default async function getHomePageData(req, res) {
 				},
 				announcements: {
 					$push: {
-						class_name: "$intake_name",
+						intake_name: "$intake_name",
 						announcement_title: "$announcement_title",
 						announcement_description: "$announcement_description",
 						bgcolor: "$bgcolor",

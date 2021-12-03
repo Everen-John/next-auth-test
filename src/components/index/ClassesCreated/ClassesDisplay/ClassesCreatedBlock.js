@@ -3,11 +3,7 @@ import Link from "next/link"
 
 import { PlusIcon } from "@heroicons/react/solid"
 
-export default function ClassesJoinedBlock({
-	classesCreatedData,
-	settxtJoinIntake,
-	btnJoinIntake,
-}) {
+export default function ClassesJoinedBlock({ classesCreatedData }) {
 	return (
 		<div className='bg-green-600 mb-2'>
 			<h2 className='text-base pt-2 pl-2 text-white'>
@@ -15,7 +11,7 @@ export default function ClassesJoinedBlock({
 			</h2>
 
 			<div className='overflow-x-auto whitespace-nowrap'>
-				<Link href={"/Joined/"}>
+				<Link href={"/createClass"}>
 					<div className='bg-white border border-solid rounded-md h-44 w-36 inline-block m-2 shadow-xl'>
 						<div className='truncate text-xs pl-2 font-bold text-center'>
 							Create a New Class!

@@ -94,6 +94,10 @@ export default function Index() {
 					console.log(`intake_${res._id._id}_name`, res._id.intake_name)
 					return res
 				})
+				.catch((err) => {
+					setIntakeData(res)
+					setIntakeLoading(false)
+				})
 
 			setIntakeData(res)
 			setIntakeLoading(false)
@@ -188,7 +192,7 @@ export default function Index() {
 						alt='spinner'
 					/>
 				</div>
-			) : (
+			) : intakeData ? (
 				<div>
 					<ClassCreatedContentBlock
 						intakeCreated={intakeData}
@@ -196,6 +200,12 @@ export default function Index() {
 						intakeid={intakeId}
 					/>
 				</div>
+			) : (
+				<h1 className='text-2xs text-white text-center '>
+					Click the bottom right {"  "}
+					<PlusIcon className='w-7 h-7 p-2 inline-block bg-green-600 text-green-100 rounded-full hover:bg-green-700 ' />{" "}
+					to start!
+				</h1>
 			)}
 		</Layout>
 	)

@@ -114,14 +114,6 @@ export default function CreateQuiz() {
 	}
 
 	const namingConventionChangeHandler = (e, key) => {
-		// let namingConventionTemp = JSON.parse(
-		// 	JSON.stringify(submissionData.namingConvention)
-		// )
-		// namingConventionTemp[key] = e.target.value
-		// setSubmissionData({
-		// 	...submissionData,
-		// 	namingConvention: namingConventionTemp,
-		// })
 		if (e.target.value.match(/^[\w&.\-]+$/) != null || e.target.value === "") {
 			let namingConventionTemp = JSON.parse(
 				JSON.stringify(submissionData.namingConvention)

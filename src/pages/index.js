@@ -12,6 +12,7 @@ import ClassesJoined from "../components/index/ClassesJoined/ClassesDisplay/clas
 import CalendarCell from "../components/index/ClassesJoined/Calendar/calendarCell"
 import ClassesCreated from "../components/index/ClassesCreated/ClassesDisplay/ClassesCreatedBlock"
 import autoprefixer from "autoprefixer"
+import { useRouter } from "next/router"
 
 export default function HomePage({}) {
 	//STATES////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -24,6 +25,7 @@ export default function HomePage({}) {
 	const [classesCreatedData, setClassesCreatedData] = useState()
 
 	const [txtJoinIntake, settxtJoinIntake] = useState()
+	const router = useRouter()
 
 	let dateForAPI = new Date(thisDate.getFullYear(), thisDate.getMonth(), 1)
 
@@ -187,9 +189,7 @@ export default function HomePage({}) {
 						window.alert(res.msg)
 					} else if (res.joined == true) {
 						window.alert(res.msg)
-					}
-					if (res.refresh) {
-						location.reload()
+						router.reload()
 					}
 				})
 				.catch((e) => console.log(e))
@@ -269,9 +269,9 @@ export default function HomePage({}) {
 				/>
 				<ClassesCreated
 					classesCreatedData={classesCreatedData}
-					txtJoinIntake={txtJoinIntake}
-					settxtJoinIntake={settxtJoinIntake}
-					btnJoinIntake={joinIntake}
+					// txtJoinIntake={txtJoinIntake}
+					// settxtJoinIntake={settxtJoinIntake}
+					// btnJoinIntake={joinIntake}
 				/>
 			</div>
 		</Layout>

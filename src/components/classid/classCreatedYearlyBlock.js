@@ -15,7 +15,7 @@ export default function ClassCreatedYearlyBlock({
 }) {
 	let today = new Date()
 	let itemYearBeginning = new Date(yearlyItem.year, 0, 1)
-	let itemYearEnding = new Date(yearlyItem.year, 11, 1)
+	let itemYearEnding = new Date(yearlyItem.year, 11, 31)
 
 	const [folded, setFolded] = useState(
 		!(today >= itemYearBeginning && today <= itemYearEnding)

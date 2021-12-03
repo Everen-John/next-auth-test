@@ -80,7 +80,7 @@ export default function CalendarCell({
 																{item.announcement_title}
 															</div>
 															<div className='pr-2 text-2xs self-center italic'>
-																{item.class_name}
+																{item.intake_name}
 															</div>
 														</div>
 
