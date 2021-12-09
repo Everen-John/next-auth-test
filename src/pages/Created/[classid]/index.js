@@ -1,13 +1,13 @@
 import { useRouter } from "next/router"
 import { useSession } from "next-auth/react"
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import IntakeAccordian from "../../../components/classid/intakeAccordian"
 import Image from "next/image"
 import { XyzTransitionGroup } from "@animxyz/react"
 
 import Layout from "../../../components/master/layout"
 import ClassCreatedContentBlock from "../../../components/classid/classCreatedContentBlock"
-import { BookOpenIcon } from "@heroicons/react/outline"
+import { BookOpenIcon, DuplicateIcon } from "@heroicons/react/outline"
 import { PlusIcon } from "@heroicons/react/solid"
 
 import FABButton from "../../../components/classid/classCreatedFABButton"
@@ -20,11 +20,13 @@ export default function Index() {
 	const [intakeData, setIntakeData] = useState()
 	const [intakeLoading, setIntakeLoading] = useState(true)
 	const [loading, setLoading] = useState(true)
+	const [intakeCopied, setIntakeCopied] = useState(false)
+	const intakeidRef = useRef()
 
-	const { classid } = router.query
+	const { classid, get_intake_id } = router.query
 
 	const getIntakeList = async () => {
-		setLoading(true)
+		// setLoading(true)
 		if (status === "authenticated") {
 			let res = await fetch(
 				"../api/classCreatedData/getIntakesOfClassCreated",
@@ -46,8 +48,21 @@ export default function Index() {
 			).then((res) => res.json())
 			console.log("intakeList", res)
 			setIntakesInClass(res)
-			if (
+			if (get_intake_id) {
+				setIntakeId(get_intake_id)
+				localStorage.setItem(
+					`classId${classid}lastPickedAccordianMenu`,
+					JSON.stringify({
+						intake_oID: get_intake_id,
+						// intake_name: res[0].intake_name,
+						intake_name:
+							res[res.findIndex((i) => i.intake_oID === get_intake_id)]
+								.intake_name,
+					})
+				)
+			} else if (
 				!intakeId &&
+				!get_intake_id &&
 				!localStorage.getItem(`classId${classid}lastPickedAccordianMenu`)
 			) {
 				setIntakeId(res[0].intake_oID)
@@ -112,16 +127,23 @@ export default function Index() {
 		setIntakeId(intakeid)
 	}
 
+	const copyIntakeid = () => {
+		let intakeid = intakeidRef.current.innerText
+		console.log(intakeid)
+		navigator.clipboard.writeText(intakeid)
+		setIntakeCopied(true)
+	}
+
 	useEffect(() => {
 		async function fetchIntakeList() {
-			if (status === "authenticated") {
+			if (Object.keys(router.query).length && status === "authenticated") {
 				getIntakeList()
 			} else {
 				console.log("Awaiting authentication!")
 			}
 		}
 		fetchIntakeList()
-	}, [status])
+	}, [status, router.query])
 
 	useEffect(async () => {
 		if (!intakeId && classid) {
@@ -157,13 +179,15 @@ export default function Index() {
 		}
 	}, [intakeId, status === "authenticated"])
 
+	useEffect(() => {
+		if (intakeCopied === true) {
+			setTimeout(() => {
+				setIntakeCopied(false)
+			}, 2000)
+		}
+	}, [intakeCopied])
 	return (
 		<Layout session={session}>
-			<div className='bg-green-500'>
-				<p>ClassId: {classid}</p>
-			</div>
-			<p>IntakeId: {intakeId}</p>
-
 			{loading ? null : (
 				<div>
 					<div className='max-w-full text-3xl m-2 rounded-md pl-2 bg-gray-800 text-green-400 font-bold shadow-lg text-center'>
@@ -171,11 +195,35 @@ export default function Index() {
 						{intakesInClass[0].class_name}
 					</div>
 					<IntakeAccordian
-						title={"Test"}
 						classid={classid}
 						content={intakesInClass}
 						loadIntakeData={loadIntakeData}
+						class_name={intakesInClass[0].class_name}
 					/>
+					<div
+						className='flex justify-left text-gray-600 bg-gray-800 m-2 rounded-md px-10 hover:bg-gray-300 hover:text-gray-800 hover:cursor-pointer'
+						onClick={copyIntakeid}
+					>
+						<div>
+							<DuplicateIcon className='h-6 w-6 inline mr-2' />
+						</div>{" "}
+						<div
+							className='inline self-center select-none h-4'
+							ref={intakeidRef}
+						>
+							<XyzTransitionGroup
+								className='item-group'
+								xyz='fade right-100% back-1'
+							>
+								{intakeCopied && (
+									<div className='inline-block absolute'> Intake Copied!</div>
+								)}
+								{!intakeCopied && (
+									<div className='inline-block absolute'>{intakeId}</div>
+								)}
+							</XyzTransitionGroup>
+						</div>
+					</div>
 					<FABButton
 						classid={intakesInClass[0].class_oID}
 						intakeid={intakeId}
@@ -194,11 +242,13 @@ export default function Index() {
 				</div>
 			) : intakeData ? (
 				<div>
-					<ClassCreatedContentBlock
-						intakeCreated={intakeData}
-						classid={classid}
-						intakeid={intakeId}
-					/>
+					<div>
+						<ClassCreatedContentBlock
+							intakeCreated={intakeData}
+							classid={classid}
+							intakeid={intakeId}
+						/>
+					</div>
 				</div>
 			) : (
 				<h1 className='text-2xs text-white text-center '>

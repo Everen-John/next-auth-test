@@ -23,96 +23,133 @@ export default async function getHomePageData(req, res) {
 		{
 			$project: {
 				intakes_joined: 1.0,
+				intakes_taught: 1.0,
 			},
 		},
 		{
-			$unwind: {
-				path: "$intakes_joined",
-			},
-		},
-		{
-			$lookup: {
-				from: "intakes",
-				foreignField: "_id",
-				localField: "intakes_joined",
-				as: "intakes_data",
+			$facet: {
+				facet_res: [
+					{
+						$lookup: {
+							from: "intakes",
+							localField: "intakes_joined",
+							foreignField: "_id",
+							as: "intakes_joined_data",
+						},
+					},
+					{
+						$lookup: {
+							from: "intakes",
+							localField: "intakes_taught",
+							foreignField: "_id",
+							as: "intakes_taught_data",
+						},
+					},
+				],
 			},
 		},
 		{
 			$project: {
 				_id: 0.0,
-				intakes_joined: 1.0,
-				intakes_data: 1.0,
-			},
-		},
-		{
-			$unwind: {
-				path: "$intakes_data",
+				intakes_joined_data: {
+					$first: "$facet_res.intakes_joined_data",
+				},
+				intakes_taught_data: {
+					$first: "$facet_res.intakes_taught_data",
+				},
 			},
 		},
 		{
 			$addFields: {
-				announcements: "$intakes_data.announcement_oIDs",
+				"intakes_joined_data.createdIntake": false,
+				"intakes_taught_data.createdIntake": true,
+			},
+		},
+		{
+			$project: {
+				intakeData: {
+					$concatArrays: ["$intakes_joined_data", "$intakes_taught_data"],
+				},
 			},
 		},
 		{
 			$unwind: {
-				path: "$announcements",
+				path: "$intakeData",
+				preserveNullAndEmptyArrays: true,
+			},
+		},
+		{
+			$unwind: {
+				path: "$intakeData.announcement_oIDs",
+				preserveNullAndEmptyArrays: true,
+			},
+		},
+		{
+			$addFields: {
+				announcements: {
+					announcement_oID: "$intakeData.announcement_oIDs",
+					createdIntake: "$intakeData.createdIntake",
+				},
+			},
+		},
+		{
+			$project: {
+				intakeData: 1,
+				announcements: 1,
+				_id: 0,
 			},
 		},
 		{
 			$lookup: {
 				from: "Announcements",
-				localField: "announcements",
+				localField: "announcements.announcement_oID",
 				foreignField: "_id",
-				as: "announcement_data",
+				as: "announcementData",
 			},
 		},
 		{
-			$unwind: {
-				path: "$announcement_data",
+			$project: {
+				intakeData: 1,
+				announcement_oID: "$announcements.announcement_oID",
+				createdIntake: "$announcements.createdIntake",
+				announcementData: {
+					$first: "$announcementData",
+				},
 			},
 		},
 		{
 			$lookup: {
 				from: "class",
 				foreignField: "_id",
-				localField: "intakes_data.class_oID",
-				as: "class_data",
+				localField: "intakeData.class_oID",
+				as: "classData",
 			},
 		},
 		{
 			$unwind: {
-				path: "$class_data",
-			},
-		},
-		{
-			$addFields: {
-				intake_name: "$intakes_data.intake_name",
-				announcement_title: "$announcement_data.announcement_Title",
-				announcement_description: "$announcement_data.announcement_description",
-				bgcolor: "$announcement_data.bgcolor",
-				publish_time: "$announcement_data.publish_time",
-				month: {
-					$month: {
-						date: "$announcement_data.publish_time",
-					},
-				},
+				path: "$classData",
 			},
 		},
 		{
 			$project: {
-				intake_name: 1.0,
-				intakes_id: "$intakes_joined",
-				announcement_id: "$announcements",
-				announcement_title: 1.0,
-				announcement_description: 1.0,
-				publish_time: 1.0,
-				bgcolor: 1.0,
-				month: 1.0,
-				year: {
-					$year: "$publish_time",
+				class_name: "$classData.class_name",
+				intake_name: "$intakeData.intake_name",
+				intake_id: "$intakeData._id",
+				class_id: "$classData._id",
+				announcement_id: "$announcementData._id",
+				announcement_title: "$announcementData.announcement_Title",
+				announcement_description: "$announcementData.announcement_description",
+				bgcolor: "$announcementData.bgcolor",
+				publish_time: "$announcementData.publish_time",
+				month: {
+					$month: {
+						date: "$announcementData.publish_time",
+					},
 				},
+				year: {
+					$year: "$announcementData.publish_time",
+				},
+				createdIntake: 1,
 			},
 		},
 		{
@@ -128,13 +165,16 @@ export default async function getHomePageData(req, res) {
 				},
 				announcements: {
 					$push: {
+						createdIntake: "$createdIntake",
+						class_name: "$class_name",
 						intake_name: "$intake_name",
 						announcement_title: "$announcement_title",
 						announcement_description: "$announcement_description",
 						bgcolor: "$bgcolor",
 						month: "$month",
-						intake_id: "$intakes_id",
+						intake_id: "$intake_id",
 						announcement_id: "$announcement_id",
+						class_id: "$class_id",
 					},
 				},
 			},

@@ -5,6 +5,7 @@ export default async function getHomePageData(req, res) {
 	let monthSelected = req.body.month
 	let user = req.body.user
 	let intakeid = req.body.intakeid
+	console.log(intakeid)
 
 	const client = await clientPromise
 
@@ -20,7 +21,18 @@ export default async function getHomePageData(req, res) {
 			},
 		},
 		{
+			$lookup: {
+				from: "class",
+				localField: "class_oID",
+				foreignField: "_id",
+				as: "classData",
+			},
+		},
+		{
 			$project: {
+				class_name: {
+					$first: "$classData.class_name",
+				},
 				student_oIDs: 1.0,
 				teacher_oIDs: 1.0,
 				quiz_oIDs: 1.0,
@@ -43,6 +55,7 @@ export default async function getHomePageData(req, res) {
 							teacher_oIDs: 1.0,
 							intake_code: 1.0,
 							intake_name: 1.0,
+							class_name: 1.0,
 						},
 					},
 				],

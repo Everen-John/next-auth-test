@@ -114,7 +114,10 @@ const createClassAndIntake = async (
 					_id: ObjectId(userid),
 				},
 				{
-					$push: { classes_taught: ObjectId(classData.insertedId) },
+					$push: {
+						intakes_taught: ObjectId(intakeData.insertedId),
+						classes_taught: ObjectId(classData.insertedId),
+					},
 				}
 			)
 			classid = classData.insertedId

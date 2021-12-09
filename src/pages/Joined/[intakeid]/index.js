@@ -32,6 +32,7 @@ export default function Intakeid() {
 				}), // body data type must match "Content-Type" header
 			}).then((res) => res.json())
 			setIntakeJoined(res)
+			console.log(res)
 			localStorage.setItem(`${res._id._id}name`, res._id.intake_name)
 			setLoading(false)
 		}

@@ -13,6 +13,7 @@ export default function CalendarCell({
 	id,
 }) {
 	const [showModal, setShowModal] = useState(false)
+	console.log("announcementDatas", announcementDatas)
 	return (
 		<div
 			className='border-solid border-b-2 p-1 h-20 bg-white'
@@ -40,7 +41,7 @@ export default function CalendarCell({
 
 			{showModal ? (
 				<>
-					<div className='justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none '>
+					<div className='justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none mx-2 md:mx-56'>
 						<div className='relative w-full my-6 mx-auto max-w-3xl'>
 							{/*content*/}
 							<div className='border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none'>
@@ -66,7 +67,14 @@ export default function CalendarCell({
 								<div className='relative p-2 flex-auto'>
 									{announcementDatas ? (
 										announcementDatas.map((item, key) => (
-											<Link href={"/Joined/" + item.intake_id} key={key}>
+											<Link
+												href={
+													item.createdIntake
+														? `/Created/${item.class_id}?get_intake_id=${item.intake_id}`
+														: `/Joined/${item.intake_id}`
+												}
+												key={key}
+											>
 												<div
 													className={
 														" rounded-md my-4 text-blueGray-500 text-lg leading-relaxed p-2 " +
@@ -74,26 +82,35 @@ export default function CalendarCell({
 													}
 													key={item.announcement_id}
 												>
-													<a href='404' target='_blank'>
-														<div className='flex flex-row'>
-															<div className='pl-2 text-xl flex-grow font-bold'>
-																{item.announcement_title}
-															</div>
-															<div className='pr-2 text-2xs self-center italic'>
-																{item.intake_name}
-															</div>
+													<div className='flex flex-row mb-4'>
+														{item.createdIntake ? (
+															<svg
+																xmlns='http://www.w3.org/2000/svg'
+																className='h-8 w-8 inline-block mr-1'
+																fill='none'
+																viewBox='0 0 24 24'
+																stroke='currentColor'
+															>
+																<path
+																	strokeLinecap='round'
+																	strokeLinejoin='round'
+																	strokeWidth={2}
+																	d='M16 4v12l-4-2-4 2V4M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z'
+																/>
+															</svg>
+														) : null}
+														<div className='pl-2 text-xl flex-grow font-bold'>
+															{item.announcement_title}
 														</div>
+														<div className='pr-2 text-2xs self-center italic '>
+															<div>{item.class_name}</div>
+															<div>{item.intake_name}</div>
+														</div>
+													</div>
 
-														<div className='pl-2 text-xs'>
-															{item.announcement_description}
-														</div>
-														<div className='pl-2 text-3xs'>
-															classes_id: {item.intake_id}
-														</div>
-														<div className='pl-2 text-3xs'>
-															announcement_id: {item.announcement_id}
-														</div>
-													</a>
+													<div className='pl-2 text-xs'>
+														{item.announcement_description}
+													</div>
 												</div>
 											</Link>
 										))

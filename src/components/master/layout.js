@@ -9,7 +9,7 @@ export default function Layout({ children, session }) {
 		<div className='h-screen'>
 			<div className='bg-gray-900 min-h-full'>
 				<Header session={session} />
-				<main className='overflow-visible'>{children}</main>
+				<main className='overflow-visible md:mx-32'>{children}</main>
 			</div>
 			<Footer />
 		</div>

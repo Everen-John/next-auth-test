@@ -1,5 +1,7 @@
 import React, { useRef, useState, useEffect } from "react"
 import { ChevronDownIcon, PlusCircleIcon } from "@heroicons/react/solid"
+import Link from "next/link"
+import { useRouter } from "next/router"
 
 const setDefaultAccordianForTheFirstTime = (classid, content) => {
 	if (!localStorage.getItem(`classId${classid}lastPickedAccordianMenu`)) {
@@ -28,7 +30,13 @@ const setDefaultAccordianData = (newAccordianSelection) => {
 		})
 	)
 }
-export default function Accordion({ title, content, classid, loadIntakeData }) {
+export default function Accordion({
+	content,
+	classid,
+	loadIntakeData,
+	class_name,
+}) {
+	const router = useRouter()
 	const [active, setActive] = useState(false)
 	const [height, setHeight] = useState("0px")
 	const [rotate, setRotate] = useState("transform duration-100 ease")
@@ -48,10 +56,19 @@ export default function Accordion({ title, content, classid, loadIntakeData }) {
 
 	const handleAccordianMenuClicked = (e) => {
 		let AccordianMenuData = JSON.parse(e.target.value)
-		console.log(AccordianMenuData)
 		setSelectedIntake(AccordianMenuData)
 		setDefaultAccordianData(AccordianMenuData)
 		loadIntakeData(AccordianMenuData.intake_oID)
+		router.replace(
+			{
+				pathname: `/Created/[classid]`,
+				query: {
+					classid: classid,
+					get_intake_id: AccordianMenuData.intake_oID,
+				},
+			},
+			{}
+		)
 		setActive(!active)
 	}
 
@@ -97,10 +114,18 @@ export default function Accordion({ title, content, classid, loadIntakeData }) {
 					</div>
 				))}
 				<div className='m-1 pt-1 pl-10 pr-10 pb-2 bg-gray-700'>
-					<button className='min-w-full text-left '>
-						<PlusCircleIcon className='max-h-7 w-4 inline-block' />{" "}
-						<div className='inline-block text-center'>Create a new Intake!</div>
-					</button>
+					<Link
+						href={`/Created/${classid}/createIntake?class_name=${class_name}`}
+					>
+						<a>
+							<button className='min-w-full text-left '>
+								<PlusCircleIcon className='max-h-7 w-4 inline-block' />{" "}
+								<div className='inline-block text-center'>
+									Create a new Intake!
+								</div>
+							</button>
+						</a>
+					</Link>
 				</div>
 			</div>
 		</div>

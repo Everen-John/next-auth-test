@@ -44,6 +44,7 @@ export default async function createQuiz(req, res) {
 					maxFileSize: submissionData.maxFileSize,
 					maxNumberOfFiles: parseInt(submissionData.maxNumberOfFiles),
 					namingConvention: submissionData.namingConvention,
+					submitters: [],
 				},
 				{ session }
 			)

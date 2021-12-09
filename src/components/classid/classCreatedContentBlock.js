@@ -13,7 +13,7 @@ export default function ClassCreatedContentBlock({
 	intakeid,
 }) {
 	return (
-		<div className='bg-gray-700 p-1'>
+		<div className=' p-1'>
 			{intakeCreated.yearlyItems.map((yearlyItem, key) => {
 				return (
 					<ClassCreatedYearlyBlock
