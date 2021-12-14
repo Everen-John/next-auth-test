@@ -73,7 +73,12 @@ export default function Index() {
 						intake_name: res[0].intake_name,
 					})
 				)
+				localStorage.setItem(
+					`intake_${res[0].intake_oID}_name`,
+					res[0].intake_name
+				)
 			}
+
 			setLoading(false)
 		} else {
 			console.log("Not authenticated!")

@@ -35,4 +35,4 @@ yarn-error.log*
 .vercel
 
 #Upload Folder
-/public/uploads/
+/public/uploads/*
