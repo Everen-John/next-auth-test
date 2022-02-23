@@ -172,7 +172,7 @@ export default function SubmissionDashboard() {
 							{submissionData.submitters.length > 0 ? (
 								submissionData.submitters.map((item, key) => {
 									return (
-										<div className='flex justify-center flex-row'>
+										<div className='flex justify-center flex-row' key={key}>
 											<a
 												href={item.submittedLocation}
 												className='inline-block'

@@ -17,10 +17,11 @@ export const config = {
 
 export default async function uploadFile(req, res) {
 	const form = new formidable.IncomingForm()
-	form.uploadDir = "./public/uploads/"
+	form.uploadDir = "/tmp/"
 	form.keepExtensions = true
 
 	var items = await new Promise((resolve, reject) => {
+		console.log("req", req)
 		form.parse(req, (err, fields, files) => {
 			if (err) {
 				reject(err)

@@ -357,7 +357,7 @@ export default function SubmissionId() {
 										{existingSubmittedFiles.length > 0 ? (
 											existingSubmittedFiles.map((item, key) => {
 												return (
-													<div className='flex justify-center flex-row'>
+													<div className='flex justify-center flex-row' key={key}>
 														<a
 															href={item.submitters.submittedLocation}
 															className='inline-block'
