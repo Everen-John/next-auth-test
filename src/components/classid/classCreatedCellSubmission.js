@@ -30,7 +30,7 @@ export default function ClassCreatedCellSubmission({ weekItem, classid }) {
 				}/submission/${
 					weekItem.submissionDatas._id
 				}?intake_name=${localStorage.getItem(
-					`${weekItem.submissionDatas.in_intake_oID}name`
+					`intake_${weekItem.contentDatas.in_intake_oID}_name`
 				)}`}
 			>
 				<div>

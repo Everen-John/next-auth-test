@@ -112,6 +112,10 @@ export default function CreateDocument() {
 			})
 				.then((res) => res.json())
 				.catch((e) => console.log(e))
+			if (res.msg === "ok") {
+				window.alert("Updated Successfully!")
+				router.push(`../../${classid}`)
+			}
 		} catch (e) {
 			console.log(e)
 		}

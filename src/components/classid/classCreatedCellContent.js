@@ -29,7 +29,7 @@ export default function ClassCreatedCellContent({
 				href={`${classid}/${
 					weekItem.contentDatas.in_intake_oID
 				}/editContent?intake_name=${localStorage.getItem(
-					`${weekItem.contentDatas.in_intake_oID}name`
+					`intake_${weekItem.contentDatas.in_intake_oID}_name`
 				)}&contentid=${weekItem.contentDatas._id}`}
 			>
 				<div>
