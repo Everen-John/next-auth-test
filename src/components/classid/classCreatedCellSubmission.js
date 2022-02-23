@@ -6,7 +6,11 @@ import { BookOpenIcon } from "@heroicons/react/outline"
 import { DocumentDownloadIcon, InboxInIcon } from "@heroicons/react/outline"
 import { useRef, useState, useEffect } from "react"
 
-export default function ClassCreatedCellSubmission({ weekItem, classid }) {
+export default function ClassCreatedCellSubmission({
+	weekItem,
+	classid,
+	intakeid,
+}) {
 	let anchorRef = useRef()
 	let deadline = new Date(weekItem.submissionDatas.deadline)
 	let deadlineDate = deadline.toLocaleDateString("en-GB")
@@ -29,9 +33,7 @@ export default function ClassCreatedCellSubmission({ weekItem, classid }) {
 					weekItem.submissionDatas.in_intake_oID
 				}/submission/${
 					weekItem.submissionDatas._id
-				}?intake_name=${localStorage.getItem(
-					`intake_${weekItem.contentDatas.in_intake_oID}_name`
-				)}`}
+				}?intake_name=${localStorage.getItem(`intake_${intakeid}_name`)}`}
 			>
 				<div>
 					<div className='text-3xs'>

@@ -26,7 +26,7 @@ export default function ClassCreatedCellQuiz({ weekItem, classid, intakeid }) {
 				href={`${classid}/${
 					weekItem.quizDatas.in_intake_oID
 				}/quizDashboard?intake_name=${localStorage.getItem(
-					`intake_${weekItem.contentDatas.in_intake_oID}_name`
+					`intake_${intakeid}_name`
 				)}&quizid=${weekItem.quizDatas._id}`}
 			>
 				<div>

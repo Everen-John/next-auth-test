@@ -111,7 +111,6 @@ export default function Index() {
 						`intake_${res._id._id}_name`,
 						res._id.intake_name
 					)
-
 					console.log(`intake_${res._id._id}_name`, res._id.intake_name)
 					return res
 				})
