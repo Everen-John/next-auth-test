@@ -13,6 +13,7 @@ import RadioComponent from "../../../../../components/intakeid/quizid/radioCompo
 import FitbComponent from "../../../../../components/intakeid/quizid/fitbComponent"
 import CheckboxComponent from "../../../../../components/intakeid/quizid/checkboxComponent"
 import EssayComponent from "../../../../../components/intakeid/quizid/essayComponent"
+import TimerComponent from "../../../../../components/intakeid/quizid/timerComponent"
 
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false })
 
@@ -40,7 +41,7 @@ export default function QuizId() {
 				let quill
 				if (quizAttemptCheck.attempted) {
 					router.push(
-						`/Joined/${intakeid}/quiz/${quizid}/quizReport?intake_name=TCP/IP`
+						`/Joined/${intakeid}/quiz/${quizid}/quizReport?intake_name=${intake_name}`
 					)
 				} else {
 					quizData = await getQuiz()
@@ -56,6 +57,7 @@ export default function QuizId() {
 			.then(async ({ answerSheet, quizData }) => {
 				setAnswerSheet(answerSheet)
 				setQuizData(quizData)
+
 				// submitMockQuiz()
 			})
 			.then(() => {
@@ -72,7 +74,7 @@ export default function QuizId() {
 			resolve(submissionStatus)
 		}).then((submissionStatus) => {
 			if (submissionStatus.msg === "ok") {
-				window.alert("Submitted successfully!")
+				window.alert("Quiz Completed!")
 				router.push(
 					`/Joined/${intakeid}/quiz/${quizid}/quizReport?intake_name=${encodeURI(
 						intake_name
@@ -410,7 +412,7 @@ export default function QuizId() {
 					<div>
 						<div className='mb-3'>
 							<div className='bg-gray-800 text-green-400 text-xl font-bold p-2 rounded-md shadow-md mx-2'>
-								{quizData.title}
+								<div>{quizData.title}</div>
 							</div>
 							{startQuiz === 0 ? (
 								<div>
@@ -450,6 +452,12 @@ export default function QuizId() {
 							{startQuiz === 2 && questionIndex <= quizData.questions.length - 1
 								? generateOneQuestion(questionIndex)
 								: null}
+							{startQuiz != 0 ? (
+								<TimerComponent
+									expiryMinutes={quizData.completionTime}
+									performSubmissionHandler={performSubmissionAndEndQuizSession}
+								/>
+							) : null}
 						</div>
 					</div>
 				</div>

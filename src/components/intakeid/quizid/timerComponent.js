@@ -1,7 +1,12 @@
 import React from "react"
 import { useTimer } from "react-timer-hook"
 
-function TimerComponent({ expiryTimestamp }) {
+export default function TimerComponent({
+	expiryMinutes,
+	performSubmissionHandler,
+}) {
+	let expiryTimestamp = new Date()
+	expiryTimestamp.setSeconds(expiryTimestamp.getSeconds() + expiryMinutes * 60)
 	const {
 		seconds,
 		minutes,
@@ -14,31 +19,16 @@ function TimerComponent({ expiryTimestamp }) {
 		restart,
 	} = useTimer({
 		expiryTimestamp,
-		onExpire: () => console.warn("onExpire called"),
+		onExpire: () => performSubmissionHandler(),
+		autoStart: true,
 	})
 
 	return (
-		<div style={{ textAlign: "center" }}>
-			<h1>react-timer-hook </h1>
-			<p>Timer Demo</p>
-			<div style={{ fontSize: "100px" }}>
-				<span>{days}</span>:<span>{hours}</span>:<span>{minutes}</span>:
+		<div>
+			<div className='bg-gray-300 inline-block ml-2 p-2 shadow-lg rounded-md'>
+				Time remaining: <span>{hours}</span>:<span>{minutes}</span>:
 				<span>{seconds}</span>
 			</div>
-			<p>{isRunning ? "Running" : "Not running"}</p>
-			<button onClick={start}>Start</button>
-			<button onClick={pause}>Pause</button>
-			<button onClick={resume}>Resume</button>
-			<button
-				onClick={() => {
-					// Restarts to 5 minutes timer
-					const time = new Date()
-					time.setSeconds(time.getSeconds() + 300)
-					restart(time)
-				}}
-			>
-				Restart
-			</button>
 		</div>
 	)
 }
