@@ -1,4 +1,16 @@
-html,
+@import "https://cdn.jsdelivr.net/npm/@animxyz/core";
+@import "react-datepicker/dist/react-datepicker.css";
+@import "@uppy/core/dist/style.css";
+@import "@uppy/file-input/dist/style.css";
+@import "@uppy/core/dist/style.css";
+@import "@uppy/drag-drop/dist/style.css";
+@import "@uppy/core/dist/style.css";
+@import "@uppy/dashboard/dist/style.css";
+@import "react-quill/dist/quill.snow.css";
+@import "https://cdn.jsdelivr.net/npm/@tailwindcss/custom-forms@0.2.1/dist/custom-forms.css";
+html {
+	@apply bg-gray-900;
+}
 body {
 	padding: 0;
 	margin: 0;
@@ -14,4 +26,16 @@ a {
 
 * {
 	box-sizing: border-box;
+}
+
+.react-datepicker-popper {
+	z-index: 9999 !important;
+}
+
+.react-datepicker {
+	z-index: 9999 !important;
+}
+
+.uppy-DashboardContent-bar {
+	z-index: 9900 !important;
 }

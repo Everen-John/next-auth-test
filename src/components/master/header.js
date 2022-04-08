@@ -4,21 +4,27 @@ import Image from "next/image"
 import Link from "next/link"
 import { signIn, signOut } from "next-auth/react"
 
-export default function Component({ session }) {
+export default function Header({ session }) {
 	return (
 		<div className='bg-gray-100 w-full flex p-3'>
-			<h1 className='flex-grow text-2xl'>Eren</h1>
+			<Link href='/' passHref>
+				<h1 className=' text-2xl font-light text-gray-600 cursor-pointer hover:text-green-700'>
+					Eren
+				</h1>
+			</Link>
+			<div className='flex-grow'></div>
+
 			{session ? (
 				<div className='flex flex-row'>
-					<img
+					<Image
 						src={session.user.image}
-						width='40px'
-						height='auto'
-						className='rounded-full mr-2 border-solid border-gray-800 border-2'
+						width={40}
+						height={40}
+						className='rounded-full '
 					/>
 
 					<button
-						className='mr-1 text-red-500 self-center hover:underline'
+						className='mr-1 text-red-500 self-center hover:underline ml-2'
 						onClick={() => signOut()}
 					>
 						Sign out

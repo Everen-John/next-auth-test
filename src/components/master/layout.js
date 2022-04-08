@@ -4,12 +4,13 @@ import Image from "next/image"
 import Link from "next/link"
 import Header from "./header"
 import Footer from "./footer"
-
-export default function layout({ children, session }) {
+export default function Layout({ children, session }) {
 	return (
-		<div className=''>
-			<Header session={session} />
-			<main className=''>{children}</main>
+		<div className='h-screen'>
+			<div className='bg-gray-900 min-h-full'>
+				<Header session={session} />
+				<main className='overflow-visible md:mx-32'>{children}</main>
+			</div>
 			<Footer />
 		</div>
 	)
